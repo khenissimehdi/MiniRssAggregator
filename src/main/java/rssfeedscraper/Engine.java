@@ -78,5 +78,5 @@ public class Engine {
         var agregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
         var answer = agregator.retrieve();
         System.out.println(answer);
-    }//t es moche fdp
+    }
 }
