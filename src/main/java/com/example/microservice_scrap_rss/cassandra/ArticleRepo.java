@@ -37,7 +37,7 @@ public class ArticleRepo {
 
     public void createTable(String keyspace) {
         CreateTable createTable = SchemaBuilder.createTable("article").ifNotExists()
-                .withPartitionKey("id", DataTypes.INT)
+                .withPartitionKey("id", DataTypes.UUID)
                 .withColumn("title", DataTypes.TEXT)
                 .withColumn("description", DataTypes.TEXT)
                 .withColumn("pubDate",DataTypes.DATE)

@@ -18,10 +18,11 @@ public class RunAfterStartup {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        keyspaceRepository.createKeyspace("test", 1);
+//        keyspaceRepository.createKeyspace("test", 1);
         keyspaceRepository.useKeyspace("test");
-        userRepo.createTable("user");
-        userRepo.insertUser();
+//        userRepo.createTable("user");
+//        userRepo.insertUser();
+        userRepo.subscribe(UUID.fromString("ad791599-e0a4-4520-a522-656212b56dcd"),UUID.randomUUID());
 
 
 

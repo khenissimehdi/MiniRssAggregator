@@ -11,7 +11,7 @@ public class User {
 
     @PrimaryKey
     private final UUID id;
-    private final ArrayList<Integer> listArticles = new ArrayList<>();
+    private final ArrayList<UUID> listarticles = new ArrayList<>();
 
     public User(UUID id) {
         this.id = id;
@@ -23,13 +23,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "User " + id + " articles : " + listArticles;
+        return "User " + id + " articles : " + listarticles;
     }
 
-    public void subscribe(int idArticle){listArticles.add(idArticle);
-    }
+    public void subscribe(UUID idArticle){listarticles.add(idArticle);}
 
     public String last10() {
-        return listArticles.subList(listArticles.size() - 10, listArticles.size()).toString();
+        return listarticles.subList(listarticles.size() - 10, listarticles.size()).toString();
     }
 }

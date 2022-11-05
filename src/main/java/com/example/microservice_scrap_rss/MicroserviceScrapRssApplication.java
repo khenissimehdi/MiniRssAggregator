@@ -28,12 +28,12 @@ public class MicroserviceScrapRssApplication {
         SpringApplication.run(MicroserviceScrapRssApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> {
-            kafkaTemplate.send("rss", "hello kafka");
-        };
-    }
+//    @Bean
+//    CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
+//        return args -> {
+//            kafkaTemplate.send("rss", "hello kafka");
+//        };
+//    }
 
 
     @Bean

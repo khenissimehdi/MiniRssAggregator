@@ -36,9 +36,9 @@ public class UserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTable createTable = SchemaBuilder.createTable("person").ifNotExists()
-                .withPartitionKey("id", DataTypes.INT)
-                .withColumn("listArticle", DataTypes.listOf(DataTypes.INT));
+        CreateTable createTable = SchemaBuilder.createTable("user").ifNotExists()
+                .withPartitionKey("id", DataTypes.UUID)
+                .withColumn("listarticles", DataTypes.listOf(DataTypes.UUID));
         executeStatement(createTable.build(), keyspace);
     }
 
@@ -52,7 +52,7 @@ public class UserRepo {
         return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
     }
 
-    public void subscribe(UUID uuid,int idArticle){
+    public void subscribe(UUID uuid,UUID idArticle){
         User us=getUserById(uuid);
         us.subscribe(idArticle);
         template.update(us);

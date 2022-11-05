@@ -7,8 +7,8 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaTopicConfig {
-    @Bean
-    public NewTopic scrapTopic() {
-        return TopicBuilder.name("rss").build();
-    }
+//    @Bean
+//    public NewTopic scrapTopic() {
+//        return TopicBuilder.name("rss").build();
+//    }
 }
