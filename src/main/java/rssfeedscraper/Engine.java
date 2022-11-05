@@ -36,7 +36,7 @@ public class Engine {
         if(sites.isEmpty()){
             throw new IllegalStateException("file is empty");
         }
-
+        System.out.println("sites :"+sites.toString());
        return new Engine(new ArrayList<>(sites),timeoutMilliGlobal,poolSize);
     }
 
@@ -45,7 +45,7 @@ public class Engine {
             var request = new URL(site);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(request));
-            return () -> Optional.of(new Answer(feed.getTitle(), feed.getDescription(), feed.getAuthor()));
+            return () -> Optional.of(new Answer(feed.getTitle(), feed.getDescription(), feed.getAuthor(), feed.getPublishedDate()));
         } catch (FeedException | IOException e) {
             return Optional::empty;
         }
