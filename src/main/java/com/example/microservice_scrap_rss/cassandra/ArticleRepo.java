@@ -51,7 +51,7 @@ public class ArticleRepo {
         template.insert(new Article(UUID.randomUUID(),title,description,pubDate,link));
     }
 
-    public User getPersonById(UUID uuid) {
-        return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
+    public Article getArticleById(UUID uuid) {
+        return template.selectOne(Query.query(Criteria.where("id").is(uuid)), Article.class);
     }
 }

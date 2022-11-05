@@ -26,8 +26,7 @@ public class User {
         return "User " + id + " articles : " + listArticles;
     }
 
-    public void subscribe(int idArticle){
-      listArticles.add(idArticle);
+    public void subscribe(int idArticle){listArticles.add(idArticle);
     }
 
     public String last10() {

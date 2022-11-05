@@ -38,7 +38,7 @@ public class UserRepo {
     public void createTable(String keyspace) {
         CreateTable createTable = SchemaBuilder.createTable("person").ifNotExists()
                 .withPartitionKey("id", DataTypes.INT)
-                .withColumn("listArticle", DataTypes.listOf(DataTypes.TEXT));
+                .withColumn("listArticle", DataTypes.listOf(DataTypes.INT));
         executeStatement(createTable.build(), keyspace);
     }
 
@@ -48,7 +48,17 @@ public class UserRepo {
         template.insert(new User(UUID.randomUUID()));
     }
 
-    public User getPersonById(UUID uuid) {
+    public User getUserById(UUID uuid) {
         return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
+    }
+
+    public void subscribe(UUID uuid,int idArticle){
+        User us=getUserById(uuid);
+        us.subscribe(idArticle);
+        template.update(us);
+    }
+
+    public String last10(UUID uuid) {
+        return getUserById(uuid).last10();
     }
 }
