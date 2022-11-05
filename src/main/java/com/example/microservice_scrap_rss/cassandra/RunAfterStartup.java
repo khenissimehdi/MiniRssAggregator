@@ -18,12 +18,12 @@ public class RunAfterStartup {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        //  keyspaceRepository.createKeyspace("test", 1);
-       // keyspaceRepository.useKeyspace("test");
-        //  cassandraTemplateRepo.createTable("test");
-        // personRepo.insertPerson( "mehdi",50);
-       // var person = personRepo.getPersonById(UUID.fromString("2bbfb169-d945-4ee0-9520-71e81cc6f3c"));
-        //System.out.println(person);
+        keyspaceRepository.createKeyspace("test", 1);
+        keyspaceRepository.useKeyspace("test");
+//        cassandraTemplateRepo.createTable("test");
+        personRepo.insertPerson("mehdi", 50);
+        var person = personRepo.getPersonById(UUID.fromString("2bbfb169-d945-4ee0-9520-71e81cc6f3c"));
+        System.out.println(person);
 
 
     }
