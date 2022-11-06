@@ -2,19 +2,24 @@ package com.rss_aggregator.cassandra;
 
 import com.rss_aggregator.repository.KeyspaceRepository;
 import com.rss_aggregator.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class RunAfterStartup {
 
-    @Autowired
-    private KeyspaceRepository keyspaceRepository;
+    private final KeyspaceRepository keyspaceRepository;
+    private final PersonRepository personRepository;
 
-    @Autowired
-    private PersonRepository personRepository;
+    public RunAfterStartup(KeyspaceRepository keyspaceRepository, PersonRepository personRepository) {
+        Objects.requireNonNull(keyspaceRepository);
+        Objects.requireNonNull(personRepository);
+        this.keyspaceRepository = keyspaceRepository;
+        this.personRepository = personRepository;
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
