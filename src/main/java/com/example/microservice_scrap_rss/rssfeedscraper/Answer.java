@@ -1,13 +1,13 @@
 package com.example.microservice_scrap_rss.rssfeedscraper;
 
-public record Answer(String title, String item, String author) {
+public record Answer(String title, String description, String author) {
 
     @Override
     public String toString() {
         if (author == null)
-            return item + "@" + title + " : Not found";
+            return description + "@" + title + " : Not found";
         else
-            return item + "@" + title + " : " + author;
+            return description + "@" + title + " : " + author;
     }
 
     @Override
@@ -17,14 +17,14 @@ public record Answer(String title, String item, String author) {
         Answer answer = (Answer) o;
 
         if (!title.equals(answer.title)) return false;
-        if (!item.equals(answer.item)) return false;
+        if (!description.equals(answer.description)) return false;
         return author != null ? author.equals(answer.author) : answer.author == null;
     }
 
     @Override
     public int hashCode() {
         int result = title.hashCode();
-        result = 31 * result + item.hashCode();
+        result = 31 * result + description.hashCode();
         result = 31 * result + (author != null ? author.hashCode() : 0);
         return result;
     }

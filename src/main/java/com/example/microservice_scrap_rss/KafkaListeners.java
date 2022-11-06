@@ -18,6 +18,4 @@ public class KafkaListeners {
         List<Answer> participantJsonList = mapper.readValue(data, new TypeReference<List<Answer>>(){});
         System.out.println("GOT :" + participantJsonList);
     }
-
-
 }
