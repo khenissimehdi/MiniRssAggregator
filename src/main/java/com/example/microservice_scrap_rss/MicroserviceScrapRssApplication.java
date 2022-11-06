@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.example.microservice_scrap_rss.cassandra.CassandraConnector;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
 
+import io.javalin.Javalin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootApplication
 public class MicroserviceScrapRssApplication {
@@ -26,6 +28,7 @@ public class MicroserviceScrapRssApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(MicroserviceScrapRssApplication.class, args);
+
     }
 
 //    @Bean

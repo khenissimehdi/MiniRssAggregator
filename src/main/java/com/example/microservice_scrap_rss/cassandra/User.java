@@ -3,18 +3,18 @@ package com.example.microservice_scrap_rss.cassandra;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 @Table
 public class User {
 
     @PrimaryKey
     private final UUID id;
-    private final ArrayList<UUID> listarticles = new ArrayList<>();
+    private ArrayList<UUID> listarticles;
 
     public User(UUID id) {
         this.id = id;
+        listarticles=new ArrayList<>();
     }
 
     public UUID getId() {
@@ -26,7 +26,10 @@ public class User {
         return "User " + id + " articles : " + listarticles;
     }
 
-    public void subscribe(UUID idArticle){listarticles.add(idArticle);}
+    public void subscribe(UUID idArticle){
+        if(listarticles==null) listarticles=new ArrayList<>();
+        Collections.addAll(listarticles,idArticle);
+    }
 
     public String last10() {
         return listarticles.subList(listarticles.size() - 10, listarticles.size()).toString();
