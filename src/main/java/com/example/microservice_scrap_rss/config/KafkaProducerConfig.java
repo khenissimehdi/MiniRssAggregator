@@ -1,4 +1,4 @@
-package com.rss_aggregator.config;
+package com.example.microservice_scrap_rss.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

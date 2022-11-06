@@ -1,4 +1,4 @@
-package com.rss_aggregator.config;
+package com.example.microservice_scrap_rss.config;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import rssfeedscraper.Answer;
+import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
 import java.util.HashMap;
 import java.util.List;

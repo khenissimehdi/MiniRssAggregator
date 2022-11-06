@@ -1,4 +1,4 @@
-package com.rss_aggregator.repository;
+package com.example.microservice_scrap_rss.cassandra;
 
 import org.springframework.stereotype.Repository;
 

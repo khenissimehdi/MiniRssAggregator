@@ -1,4 +1,4 @@
-package com.rss_aggregator;
+package com.example.microservice_scrap_rss;
 
 
 import org.slf4j.Logger;
@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
-import rssfeedscraper.Answer;
+import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
 import java.util.List;
 

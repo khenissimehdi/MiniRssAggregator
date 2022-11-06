@@ -1,4 +1,4 @@
-package com.rss_aggregator.entity;
+package com.example.microservice_scrap_rss.cassandra;
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;

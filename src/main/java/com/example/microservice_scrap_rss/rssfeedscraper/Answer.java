@@ -1,4 +1,4 @@
-package rssfeedscraper;
+package com.example.microservice_scrap_rss.rssfeedscraper;
 
 public record Answer(String title, String item, String author) {
 

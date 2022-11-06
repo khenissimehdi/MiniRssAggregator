@@ -1,7 +1,5 @@
 //package com.rss_aggregator.cassandra;
-//
-//import com.rss_aggregator.repository.KeyspaceRepository;
-//import com.rss_aggregator.repository.PersonRepository;
+
 //import org.springframework.boot.context.event.ApplicationReadyEvent;
 //import org.springframework.context.event.EventListener;
 //import org.springframework.stereotype.Component;

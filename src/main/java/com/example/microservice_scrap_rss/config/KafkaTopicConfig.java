@@ -1,4 +1,4 @@
-package com.rss_aggregator.config;
+package com.example.microservice_scrap_rss.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

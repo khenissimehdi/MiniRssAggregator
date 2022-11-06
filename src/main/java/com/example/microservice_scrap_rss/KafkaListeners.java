@@ -1,11 +1,11 @@
-package com.rss_aggregator;
+package com.example.microservice_scrap_rss;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import rssfeedscraper.Answer;
+import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
 import java.util.List;
 

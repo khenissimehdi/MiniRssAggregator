@@ -1,4 +1,4 @@
-package rssfeedscraper;
+package com.example.microservice_scrap_rss.rssfeedscraper;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;

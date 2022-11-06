@@ -1,11 +1,10 @@
-package com.rss_aggregator;
+package com.example.microservice_scrap_rss.rssfeedscraper;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rssfeedscraper.Answer;
 
 @RestController
 @RequestMapping("api/v1/messages")
