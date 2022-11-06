@@ -20,7 +20,7 @@ import java.util.concurrent.*;
 public class Engine {
     private final ArrayList<String> sites;
 
-    private List<Callable<Optional<Answer>>> cal;
+    private List<Callable<List<Optional<Answer>>>> cal;
 
     private final int timeoutMilliGlobal;
     private final  ExecutorService pool;
@@ -41,19 +41,20 @@ public class Engine {
         return new Engine(new ArrayList<>(sites),timeoutMilliGlobal,poolSize);
     }
 
-    private Callable<Optional<Answer>> performReq(String site) {
+    private Callable<List<Optional<Answer>>> performReq(String site) {
         try {
             var request = new URL(site);
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(request));
-//            return () -> {
-//                List<Optional<Answer>> articles = new ArrayList<>();
-//                feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(e.getTitle(), e.getDescription().toString(), e.getAuthor())));
-//
-//            };
-            return () -> Optional.of(new Answer(feed.getTitle(), feed.getDescription(), feed.getAuthor()));
+            List<Optional<Answer>> articles = new ArrayList<>();
+           return () -> {
+
+                feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(e.getTitle(), e.getDescription().toString(), e.getAuthor()))));
+                return articles;
+
+            };
         } catch (FeedException | IOException e) {
-            return Optional::empty;
+            return ()->List.of(Optional.empty());
         }
 
     }
@@ -73,7 +74,8 @@ public class Engine {
         this.pool.shutdown();
         future.forEach(e -> {
             try {
-                list.add(e.get());
+                var answers = e.get();
+                list.addAll(answers);
             } catch (InterruptedException | ExecutionException ex) {
                 throw new AssertionError();
             }
