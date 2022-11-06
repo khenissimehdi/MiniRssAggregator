@@ -14,6 +14,7 @@ import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Repository
@@ -47,8 +48,11 @@ public class ArticleRepo {
 
 
 
-    public void insertArticle(String title,String description, String pubDate, String link) {
-        template.insert(new Article(UUID.randomUUID(),title,description,pubDate,link));
+    public UUID insertArticle(String title, String description) {
+        var id=UUID.randomUUID();
+        var a=new Article(id,title,description,java.time.LocalDate.now(),"/articles/"+id);
+        template.insert(a);
+        return a.id();
     }
 
     public Article getArticleById(UUID uuid) {

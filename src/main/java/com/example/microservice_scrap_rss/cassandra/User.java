@@ -31,9 +31,9 @@ public class User {
         Collections.addAll(listarticles,idArticle);
     }
 
-    public String last10() {
+    public List<UUID> last10() {
         var diff=listarticles.size()-10;
         if(diff<0) diff=0;
-        return listarticles.subList(diff, listarticles.size()).toString();
+        return listarticles.subList(diff, listarticles.size());
     }
 }

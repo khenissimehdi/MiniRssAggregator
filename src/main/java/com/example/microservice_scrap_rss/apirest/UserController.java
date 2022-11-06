@@ -19,9 +19,15 @@ public class UserController {
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     @ResponseBody
-    String getBookById(@PathVariable final String userId) {
+    String getUserById(@PathVariable final String userId) {
         keyspaceRepository.useKeyspace("test");
-        var user = userRepo.getUserById(UUID.fromString(userId));
-        return user.toString();
-     }
+        return userRepo.getUserById(UUID.fromString(userId)).toString();
+    }
+
+    @RequestMapping(value = "/last10/{userId}", method = RequestMethod.GET)
+    @ResponseBody
+    String getLast10OfUser(@PathVariable final String userId) {
+        keyspaceRepository.useKeyspace("test");
+        return userRepo.last10(UUID.fromString(userId));
+    }
 }

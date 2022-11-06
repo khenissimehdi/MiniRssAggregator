@@ -8,6 +8,7 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Criteria;
@@ -21,7 +22,8 @@ public class UserRepo {
     private final CqlSession session;
     private final CassandraOperations template;
 
-
+    @Autowired
+    private ArticleRepo articleRepo;
     public UserRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
@@ -59,7 +61,14 @@ public class UserRepo {
     }
 
     public String last10(UUID uuid) {
-        return getUserById(uuid).last10();
+        var sb=new StringBuilder();
+        sb.append("{\n");
+        var list = getUserById(uuid).last10();
+        for(var articleId : list){
+            sb.append(articleRepo.getArticleById(articleId)).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
     }
 }
 
