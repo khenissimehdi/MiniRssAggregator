@@ -1,65 +1,58 @@
 package rssfeedscraper;
 
-
-import java.util.Date;
-
 public class Answer {
 
-  private final String title;
-  private final String item;
-  private final String author;
-  private final Date publishedDate;
+    private final String title;
+    private final String item;
+    private final String author;
 
-  public Answer(String title, String item, String author, Date publishedDate) {
-    this.title = title;
-    this.item = item;
-    this.author = author;
-    this.publishedDate = publishedDate;
-  }
-
-  public String getPrice() {
-    if (author==null){
-      throw new IllegalStateException();
+    public Answer(String title, String item, String author) {
+        this.title = title;
+        this.item = item;
+        this.author = author;
     }
-    return author;
-  }
 
-  public String getItem() {
-    return item;
-  }
 
-  public String getSite() {
-    return title;
-  }
-
-  public Date getDate(){
-      return publishedDate;
-  }
-
-  @Override
-  public String toString() {
-    if (author == null) {
-        //return item + "@" + title + " : Not found" + "date : unknown ";
-        return "@" + title + " : Not found" + " on date : unknown ";
-    } else {
-        //return item + "@" + title + " : " + author + "date :" + publishedDate;
-        return  "@" + title + " : by " + author + " on date :" + publishedDate;
+    public String getPrice() {
+        if (author==null){
+            throw new IllegalStateException();
+        }
+        return author;
     }
-  }
 
-  @Override
-  public boolean equals(Object o) {
-    if (!(o instanceof Answer answer)) return false;
-    if (!title.equals(answer.title)) return false;
-    if (!item.equals(answer.item)) return false;
-    return author != null ? author.equals(answer.author) : answer.author == null;
-  }
+    public String getItem() {
+        return item;
+    }
 
-  @Override
-  public int hashCode() {
-    int result = title.hashCode();
-    result = 31 * result + item.hashCode();
-    result = 31 * result + (author != null ? author.hashCode() : 0);
-    return result;
-  }
+    public String getSite() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        if (author == null) {
+            return item + "@" + title + " : Not found";
+        } else {
+            return item + "@" + title + " : " + author;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Answer)) return false;
+
+        Answer answer = (Answer) o;
+
+        if (!title.equals(answer.title)) return false;
+        if (!item.equals(answer.item)) return false;
+        return author != null ? author.equals(answer.author) : answer.author == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + item.hashCode();
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        return result;
+    }
 }

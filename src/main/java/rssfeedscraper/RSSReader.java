@@ -25,7 +25,7 @@ public class RSSReader {
     }
 
     private static Answer mapToArticle(SyndEntry entry){
-        return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor(),entry.getPublishedDate());
+        return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor());
     }
 
     public static void main(String[] args) throws IOException, FeedException {

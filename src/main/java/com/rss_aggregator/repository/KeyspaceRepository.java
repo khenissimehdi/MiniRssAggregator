@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class KeyspaceRepository  {
-    public final CqlSession session;
+    public  CqlSession session;
 
-    public KeyspaceRepository(CqlSession session) {
-        this.session = session;
-    }
+    //public KeyspaceRepository(CqlSession session) {
+    //    this.session = session;
+    //}
 
     public void createKeyspace(String keyspaceName, int numberOfReplicas) {
         CreateKeyspace createKeyspace = SchemaBuilder.createKeyspace(keyspaceName)
