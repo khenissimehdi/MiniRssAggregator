@@ -41,8 +41,6 @@ public class PersonRepository {
         executeStatement(createTable.build(), keyspace);
     }
 
-
-
     public void insertPerson(String name, int age) {
         template.insert(new Person(UUID.randomUUID(), name, age));
     }

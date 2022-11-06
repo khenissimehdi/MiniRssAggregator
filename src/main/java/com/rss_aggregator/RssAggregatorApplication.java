@@ -21,9 +21,7 @@ public class RssAggregatorApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> {
-            kafkaTemplate.send("rss", "hello kafka");
-        };
+        return args -> kafkaTemplate.send("rss", "hello kafka");
     }
 
     @Bean

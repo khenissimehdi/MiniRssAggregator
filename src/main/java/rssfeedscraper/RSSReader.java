@@ -20,9 +20,7 @@ public class RSSReader {
         SyndFeedInput input = new SyndFeedInput();
         SyndFeed feed = input.build(new XmlReader(source));
         List<Answer> articles = new ArrayList<>();
-        feed.getEntries().forEach(e->{
-            articles.add(mapToArticle(e));
-        });
+        feed.getEntries().forEach(e-> articles.add(mapToArticle(e)));
         return articles;
     }
 
