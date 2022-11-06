@@ -21,12 +21,12 @@ public class RunAfterStartup {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-//        keyspaceRepository.createKeyspace("test", 1);
+        keyspaceRepository.createKeyspace("test", 1);
         keyspaceRepository.useKeyspace("test");
-//        userRepo.createTable("user");
+        userRepo.createTable("user");
         articleRepo.createTable("test");
-//        userRepo.insertUser();
-//        var article=articleRepo.insertArticle("test","desc test",".");
+        userRepo.insertUser();
+        var article=articleRepo.insertArticle("test","desc test");
 //        userRepo.subscribe(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),article);
     }
 
