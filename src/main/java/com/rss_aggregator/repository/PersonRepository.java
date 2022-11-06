@@ -1,4 +1,4 @@
-package com.rss_aggregator.cassandra;
+package com.rss_aggregator.repository;
 
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
@@ -8,6 +8,7 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.rss_aggregator.entity.Person;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Criteria;
@@ -17,21 +18,18 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public class PersonRepo {
+public class PersonRepository {
     private final CqlSession session;
     private final CassandraOperations template;
 
-
-    public PersonRepo(CqlSession session) {
+    public PersonRepository(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
     }
 
     private ResultSet executeStatement(SimpleStatement statement, String keyspace) {
-        if (keyspace != null) {
+        if (keyspace != null)
             statement.setKeyspace(CqlIdentifier.fromCql(keyspace));
-        }
-
         return session.execute(statement);
     }
 
@@ -40,7 +38,6 @@ public class PersonRepo {
                 .withPartitionKey("id", DataTypes.TEXT)
                 .withColumn("name", DataTypes.TEXT)
                 .withColumn("age", DataTypes.INT);
-
         executeStatement(createTable.build(), keyspace);
     }
 

@@ -1,5 +1,7 @@
 package com.rss_aggregator.cassandra;
 
+import com.rss_aggregator.repository.KeyspaceRepository;
+import com.rss_aggregator.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -12,7 +14,7 @@ public class RunAfterStartup {
     private KeyspaceRepository keyspaceRepository;
 
     @Autowired
-    private PersonRepo personRepo;
+    private PersonRepository personRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
@@ -22,9 +24,5 @@ public class RunAfterStartup {
         // personRepo.insertPerson( "mehdi",50);
        // var person = personRepo.getPersonById(UUID.fromString("2bbfb169-d945-4ee0-9520-71e81cc6f3c"));
         //System.out.println(person);
-
-
     }
-
-
 }

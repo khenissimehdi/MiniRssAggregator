@@ -18,9 +18,7 @@ import java.util.concurrent.*;
 
 public class Engine {
     private final ArrayList<String> sites;
-
     private List<Callable<Optional<Answer>>> cal;
-
     private final int timeoutMilliGlobal;
     private final  ExecutorService pool;
 
@@ -33,10 +31,9 @@ public class Engine {
     public static Engine createEngineFromFile(Path path,  int timeoutMilliGlobal, int poolSize) throws IOException {
         Objects.requireNonNull(path);
         var sites = Files.readAllLines(path);
-        if(sites.isEmpty()){
+        if(sites.isEmpty())
             throw new IllegalStateException("file is empty");
-        }
-        System.out.println("sites :"+sites.toString());
+        System.out.println("sites :"+ sites);
        return new Engine(new ArrayList<>(sites),timeoutMilliGlobal,poolSize);
     }
 
@@ -49,7 +46,6 @@ public class Engine {
         } catch (FeedException | IOException e) {
             return Optional::empty;
         }
-
     }
 
     private void initCalls() {
@@ -58,9 +54,8 @@ public class Engine {
 
     public ArrayList<Optional<Answer>> retrieve() throws InterruptedException {
         ArrayList<Optional<Answer>> list = new ArrayList<>();
-        if (cal == null) {
+        if (cal == null)
             initCalls();
-        }
         var future = this.pool.invokeAll(cal, timeoutMilliGlobal, TimeUnit.MILLISECONDS);
         this.pool.shutdown();
         future.forEach(e -> {
@@ -70,13 +65,12 @@ public class Engine {
                 throw new AssertionError();
             }
         });
-
         return new ArrayList<>(list);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        var agregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
-        var answer = agregator.retrieve();
+        var aggregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
+        var answer = aggregator.retrieve();
         System.out.println(answer);
     }
 }

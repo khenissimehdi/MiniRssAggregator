@@ -17,7 +17,6 @@ import java.util.Objects;
 
 public class RSSReader {
 
-
     public static List<Answer> read(String feedLink) throws IOException, FeedException {
         URL source = new URL(feedLink);
         SyndFeedInput input = new SyndFeedInput();
@@ -28,8 +27,25 @@ public class RSSReader {
         });
         return articles;
     }
+
     private static Answer mapToArticle(SyndEntry entry){
         return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor(),entry.getPublishedDate());
     }
 
+    public static void main(String[] args) throws IOException, FeedException {
+        getListFromLines();
+    }
+
+    static void getListFromLines() throws IOException, FeedException {
+        var sites = Files.readAllLines(Path.of("feeds.txt"));
+        if(sites.isEmpty())
+            throw new IllegalStateException("file is empty");
+        System.out.println("sites :"+ sites);
+        for(var url:sites){
+            var answers = RSSReader.read(url);
+            System.out.println("for url = "+url+ "we found\n");
+            answers.forEach(System.out::println);
+            System.out.println("-------------------------------------------------------------------");
+        }
+    }
 }

@@ -2,7 +2,7 @@ package com.rss_aggregator;
 
 import com.rss_aggregator.cassandra.CassandraConnector;
 
-import com.rss_aggregator.cassandra.KeyspaceRepository;
+import com.rss_aggregator.repository.KeyspaceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;

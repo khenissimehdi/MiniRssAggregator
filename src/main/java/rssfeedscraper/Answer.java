@@ -17,7 +17,6 @@ public class Answer {
     this.publishedDate = publishedDate;
   }
 
-
   public String getPrice() {
     if (author==null){
       throw new IllegalStateException();
@@ -32,7 +31,10 @@ public class Answer {
   public String getSite() {
     return title;
   }
-  public Date getDate(){return publishedDate;}
+
+  public Date getDate(){
+      return publishedDate;
+  }
 
   @Override
   public String toString() {
@@ -47,10 +49,7 @@ public class Answer {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Answer)) return false;
-
-    Answer answer = (Answer) o;
-
+    if (!(o instanceof Answer answer)) return false;
     if (!title.equals(answer.title)) return false;
     if (!item.equals(answer.item)) return false;
     return author != null ? author.equals(answer.author) : answer.author == null;

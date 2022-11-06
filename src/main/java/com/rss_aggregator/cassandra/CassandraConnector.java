@@ -18,9 +18,6 @@ public class CassandraConnector {
         builder.addContactPoint(new InetSocketAddress("localhost", 9042));
         builder.withLocalDatacenter("datacenter1");
         session = builder.build();
-
-
-
         return session;
     }
 
@@ -31,5 +28,4 @@ public class CassandraConnector {
     public void close() {
         session.close();
     }
-
 }
