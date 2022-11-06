@@ -16,28 +16,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.*;
 
-//Bonjour c moi qui lé fé
 public class Engine {
     private final ArrayList<String> sites;
-
-    private List<Callable<List<Optional<Answer>>>> cal;
-
+    private List<Callable<List<Optional<Answer>>>> callableList;
     private final int timeoutMilliGlobal;
-    private final  ExecutorService pool;
+    private final ExecutorService executorService;
 
     private Engine(ArrayList<String> sites, int timeoutMilliGlobal, int poolSize) {
         this.sites = sites;
         this.timeoutMilliGlobal = timeoutMilliGlobal;
-        this.pool = Executors.newFixedThreadPool(poolSize);
+        this.executorService = Executors.newFixedThreadPool(poolSize);
     }
 
     public static Engine createEngineFromFile(Path path,  int timeoutMilliGlobal, int poolSize) throws IOException {
         Objects.requireNonNull(path);
         var sites = Files.readAllLines(path);
-        if(sites.isEmpty()){
+        if(sites.isEmpty())
             throw new IllegalStateException("file is empty");
-        }
-
         return new Engine(new ArrayList<>(sites),timeoutMilliGlobal,poolSize);
     }
 
@@ -48,30 +43,27 @@ public class Engine {
             SyndFeed feed = input.build(new XmlReader(request));
             List<Optional<Answer>> articles = new ArrayList<>();
            return () -> {
-
                 feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(e.getTitle(), e.getDescription().toString(), e.getAuthor()))));
                 return articles;
-
             };
         } catch (FeedException | IOException e) {
             return ()->List.of(Optional.empty());
         }
-
     }
+
     private static Answer mapToArticle(SyndEntry entry){
         return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor());
     }
     private void initCalls() {
-        this.cal = sites.stream().parallel().map(this::performReq).toList();
+        this.callableList = sites.stream().parallel().map(this::performReq).toList();
     }
 
-    public ArrayList<Optional<Answer>> retrieve() throws InterruptedException {
+    public List<Optional<Answer>> retrieve() throws InterruptedException {
         ArrayList<Optional<Answer>> list = new ArrayList<>();
-        if (cal == null) {
+        if (callableList == null)
             initCalls();
-        }
-        var future = this.pool.invokeAll(cal, timeoutMilliGlobal, TimeUnit.MILLISECONDS);
-        this.pool.shutdown();
+        var future = this.executorService.invokeAll(callableList, timeoutMilliGlobal, TimeUnit.MILLISECONDS);
+        this.executorService.shutdown();
         future.forEach(e -> {
             try {
                 var answers = e.get();
@@ -80,13 +72,12 @@ public class Engine {
                 throw new AssertionError();
             }
         });
-
         return new ArrayList<>(list);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        var agregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
-        var answer = agregator.retrieve();
+        var aggregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
+        var answer = aggregator.retrieve();
         System.out.println(answer);
     }
 }
