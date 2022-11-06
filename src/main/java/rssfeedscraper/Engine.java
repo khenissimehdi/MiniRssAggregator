@@ -54,6 +54,7 @@ public class Engine {
     private static Answer mapToArticle(SyndEntry entry){
         return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor());
     }
+
     private void initCalls() {
         this.callableList = sites.stream().parallel().map(this::performReq).toList();
     }

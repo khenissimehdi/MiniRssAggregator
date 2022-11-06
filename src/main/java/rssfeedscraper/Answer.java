@@ -1,40 +1,13 @@
 package rssfeedscraper;
 
-public class Answer {
-
-    private final String title;
-    private final String item;
-    private final String author;
-
-    public Answer(String title, String item, String author) {
-        this.title = title;
-        this.item = item;
-        this.author = author;
-    }
-
-
-    public String getPrice() {
-        if (author==null){
-            throw new IllegalStateException();
-        }
-        return author;
-    }
-
-    public String getItem() {
-        return item;
-    }
-
-    public String getSite() {
-        return title;
-    }
+public record Answer(String title, String item, String author) {
 
     @Override
     public String toString() {
-        if (author == null) {
+        if (author == null)
             return item + "@" + title + " : Not found";
-        } else {
+        else
             return item + "@" + title + " : " + author;
-        }
     }
 
     @Override
