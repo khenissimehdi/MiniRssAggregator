@@ -1,4 +1,4 @@
-package com.example.microservice_scrap_rss.cassandra;
+package com.example.rss_aggregator.cassandra;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.InetSocketAddress;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Configuration
 public class CassandraConnector {

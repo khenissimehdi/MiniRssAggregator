@@ -1,4 +1,4 @@
-package com.example.microservice_scrap_rss.config;
+package com.example.rss_aggregator.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -10,7 +10,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {

@@ -1,4 +1,4 @@
-package com.example.microservice_scrap_rss.cassandra;
+package com.example.rss_aggregator.cassandra;
 
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;

@@ -1,31 +1,22 @@
-package com.example.microservice_scrap_rss;
+package com.example.rss_aggregator;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.example.microservice_scrap_rss.cassandra.CassandraConnector;
-import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
+import com.example.rss_aggregator.cassandra.CassandraConnector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
 @SpringBootApplication
-public class MicroserviceScrapRssApplication {
+public class RssAggregatorApplication {
 
-
-    private static final Logger LOG = LoggerFactory.getLogger(MicroserviceScrapRssApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RssAggregatorApplication.class);
 
     public static void main(String[] args) {
-
-        SpringApplication.run(MicroserviceScrapRssApplication.class, args);
+        SpringApplication.run(RssAggregatorApplication.class, args);
     }
 
     @Bean
@@ -43,7 +34,6 @@ public class MicroserviceScrapRssApplication {
            // var session = connector.connect();
          //   KeyspaceRepository keyspaceRepository = new KeyspaceRepository(session);
             //keyspaceRepository.createKeyspace("neskey",2);
-
         };
     }
 }
