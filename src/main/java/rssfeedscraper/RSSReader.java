@@ -29,7 +29,7 @@ public class RSSReader {
     }
 
     public static void main(String[] args) throws IOException, FeedException {
-        var sites = getListFromLines();
+        var sites = getListFromLines(Path.of("feeds.txt"));
         for(var url:sites){
             var answers = RSSReader.read(url);
             System.out.println("for url = "+url+ " we found\n");
@@ -38,8 +38,8 @@ public class RSSReader {
         }
     }
 
-    static List<String> getListFromLines() throws IOException, FeedException {
-        var sites = Files.readAllLines(Path.of("feeds.txt"));
+    static List<String> getListFromLines(Path path) throws IOException, FeedException {
+        var sites = Files.readAllLines(path);
         if(sites.isEmpty())
             throw new IllegalStateException("file is empty");
         return sites;
