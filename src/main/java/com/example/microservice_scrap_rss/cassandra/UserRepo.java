@@ -62,3 +62,4 @@ public class UserRepo {
         return getUserById(uuid).last10();
     }
 }
+
