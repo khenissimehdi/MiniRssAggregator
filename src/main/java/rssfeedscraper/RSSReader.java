@@ -38,7 +38,7 @@ public class RSSReader {
         }
     }
 
-    static List<String> getListFromLines(Path path) throws IOException, FeedException {
+    static List<String> getListFromLines(Path path) throws IOException {
         var sites = Files.readAllLines(path);
         if(sites.isEmpty())
             throw new IllegalStateException("file is empty");
