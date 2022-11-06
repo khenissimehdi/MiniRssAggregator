@@ -1,4 +1,4 @@
-package com.example.rss_aggregator.config;
+package com.rss_aggregator.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String boostrapServers;
-
 
     public HashMap<String,Object> consumerConfig() {
         HashMap<String,Object> props = new HashMap<>();

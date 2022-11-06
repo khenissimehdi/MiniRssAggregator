@@ -1,4 +1,4 @@
-package com.example.rss_aggregator.cassandra;
+package com.rss_aggregator.cassandra;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;

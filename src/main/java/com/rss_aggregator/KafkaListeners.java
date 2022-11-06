@@ -1,4 +1,4 @@
-package com.example.rss_aggregator;
+package com.rss_aggregator;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

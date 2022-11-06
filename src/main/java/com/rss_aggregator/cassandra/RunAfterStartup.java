@@ -1,4 +1,4 @@
-package com.example.rss_aggregator.cassandra;
+package com.rss_aggregator.cassandra;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

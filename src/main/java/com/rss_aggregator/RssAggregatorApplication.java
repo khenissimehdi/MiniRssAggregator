@@ -1,7 +1,8 @@
-package com.example.rss_aggregator;
+package com.rss_aggregator;
 
-import com.example.rss_aggregator.cassandra.CassandraConnector;
+import com.rss_aggregator.cassandra.CassandraConnector;
 
+import com.rss_aggregator.cassandra.KeyspaceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -26,14 +27,13 @@ public class RssAggregatorApplication {
         };
     }
 
-
     @Bean
     CommandLineRunner commandLineRunner() {
         return args -> {
             var connector = new CassandraConnector();
-           // var session = connector.connect();
-         //   KeyspaceRepository keyspaceRepository = new KeyspaceRepository(session);
-            //keyspaceRepository.createKeyspace("neskey",2);
+            var session = connector.connect();
+            KeyspaceRepository keyspaceRepository = new KeyspaceRepository(session);
+            keyspaceRepository.createKeyspace("neskey",2);
         };
     }
 }
