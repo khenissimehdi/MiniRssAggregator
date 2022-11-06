@@ -32,6 +32,8 @@ public class User {
     }
 
     public String last10() {
-        return listarticles.subList(listarticles.size() - 10, listarticles.size()).toString();
+        var diff=listarticles.size()-10;
+        if(diff<0) diff=0;
+        return listarticles.subList(diff, listarticles.size()).toString();
     }
 }

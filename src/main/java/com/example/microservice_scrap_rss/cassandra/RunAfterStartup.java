@@ -25,6 +25,7 @@ public class RunAfterStartup {
 //        userRepo.createTable("user");
 //        userRepo.insertUser();
 //        userRepo.subscribe(UUID.fromString("65750552-c807-479f-b0d3-31a2da175a05"),UUID.randomUUID());
+        System.out.println(userRepo.last10(UUID.fromString("65750552-c807-479f-b0d3-31a2da175a05")));
     }
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void api(){
