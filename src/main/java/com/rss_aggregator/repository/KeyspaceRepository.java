@@ -1,9 +1,5 @@
 package com.rss_aggregator.repository;
 
-import com.datastax.oss.driver.api.core.CqlIdentifier;
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.api.querybuilder.schema.CreateKeyspace;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,9 +1,6 @@
 package com.rss_aggregator;
 
 
-import com.rss_aggregator.cassandra.CassandraConnector;
-import com.rss_aggregator.entity.Article;
-import com.rss_aggregator.repository.KeyspaceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import rssfeedscraper.Answer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication(exclude = {
