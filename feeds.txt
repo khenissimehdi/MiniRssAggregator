@@ -1,2 +1,1 @@
-http://feeds.feedburner.com/LesEditionsDiamond
-https://dev.to/feed/ericlecodeur
+https://www.lemonde.fr/rss/une.xml
