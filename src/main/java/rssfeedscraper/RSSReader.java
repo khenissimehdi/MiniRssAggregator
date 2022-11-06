@@ -29,19 +29,19 @@ public class RSSReader {
     }
 
     public static void main(String[] args) throws IOException, FeedException {
-        getListFromLines();
-    }
-
-    static void getListFromLines() throws IOException, FeedException {
-        var sites = Files.readAllLines(Path.of("feeds.txt"));
-        if(sites.isEmpty())
-            throw new IllegalStateException("file is empty");
-        System.out.println("sites :"+ sites);
+        var sites = getListFromLines();
         for(var url:sites){
             var answers = RSSReader.read(url);
-            System.out.println("for url = "+url+ "we found\n");
+            System.out.println("for url = "+url+ " we found\n");
             answers.forEach(System.out::println);
             System.out.println("-------------------------------------------------------------------");
         }
+    }
+
+    static List<String> getListFromLines() throws IOException, FeedException {
+        var sites = Files.readAllLines(Path.of("feeds.txt"));
+        if(sites.isEmpty())
+            throw new IllegalStateException("file is empty");
+        return sites;
     }
 }
