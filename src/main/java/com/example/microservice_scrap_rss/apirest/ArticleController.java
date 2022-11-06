@@ -3,7 +3,10 @@ package com.example.microservice_scrap_rss.apirest;
 import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
 import com.example.microservice_scrap_rss.cassandra.UserRepo;
+import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
+import com.example.microservice_scrap_rss.rssfeedscraper.ArticleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -18,6 +21,12 @@ public class ArticleController {
     @Autowired
     private ArticleRepo articleRepo;
 
+    private KafkaTemplate<String, Answer> kafkaTemplate;
+
+    public ArticleController(KafkaTemplate<String, Answer> kafkaTemplate){
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
     @RequestMapping(value = "/{articleId}", method = RequestMethod.GET)
     @ResponseBody
     String getArticleById(@PathVariable final String articleId) {
@@ -29,5 +38,12 @@ public class ArticleController {
     String postArticle(@ModelAttribute  final String title,@ModelAttribute  final String description) {
         keyspaceRepository.useKeyspace("test");
         return articleRepo.insertArticle(title, description).toString();
+    }
+
+
+
+    @PostMapping
+    public void publish(@RequestBody ArticleRequest request){
+        kafkaTemplate.send("rss",request.answer());
     }
 }

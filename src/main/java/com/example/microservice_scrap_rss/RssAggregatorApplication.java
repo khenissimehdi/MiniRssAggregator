@@ -13,9 +13,7 @@ import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
 import java.util.List;
 
-@SpringBootApplication(exclude = {
-        CassandraDataAutoConfiguration.class
-})
+@SpringBootApplication()
 public class RssAggregatorApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(RssAggregatorApplication.class);
