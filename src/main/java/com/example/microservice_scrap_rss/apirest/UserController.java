@@ -38,6 +38,13 @@ public class UserController {
     @ResponseBody
     String getLast10OfUser(@PathVariable final String userId) {
         keyspaceRepository.useKeyspace("test");
-        return articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId)).toString();
+        var list = articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId));
+        var sb=new StringBuilder();
+        sb.append("{\n");
+        for(var item : list){
+            sb.append(articleRepo.getArticleById(item.articleId).toString()).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
     }
 }
