@@ -41,7 +41,7 @@ public class ArticleByUserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTableWithOptions createTable = SchemaBuilder.createTable("artcilebyuser").ifNotExists()
+        CreateTableWithOptions createTable = SchemaBuilder.createTable("articlebyuser").ifNotExists()
                 .withPartitionKey("userId", DataTypes.UUID)
                 .withColumn("articleId", DataTypes.UUID)
                 .withClusteringColumn("inserttime", DataTypes.TIMESTAMP).
@@ -59,6 +59,9 @@ public class ArticleByUserRepo {
 
     public List<ArticleByUser> getLast10ArticlesOf(UUID userId) {
         // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArticleByUser.class);
+        return template.select(Query.query(Criteria.where("userid").is(userId)).limit(10), ArticleByUser.class);
+    }
+    public ArticleByUser getArticleByUserById(UUID uuid) {
+        return template.selectOne(Query.query(Criteria.where("id").is(uuid)), ArticleByUser.class);
     }
 }

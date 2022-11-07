@@ -1,7 +1,6 @@
 package com.example.microservice_scrap_rss.apirest;
 
-import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
-import com.example.microservice_scrap_rss.cassandra.UserRepo;
+import com.example.microservice_scrap_rss.cassandra.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,17 @@ public class UserController {
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private ArticleRepo articleRepo;
+
+    @Autowired
+    private FeedByUserRepo feedByUserRepo;
+
+    @Autowired
+    private ArticleByUserRepo articleByUserRepo;
+
+    @Autowired
+    private FeedRepo feedRepo;
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     @ResponseBody
@@ -28,6 +38,6 @@ public class UserController {
     @ResponseBody
     String getLast10OfUser(@PathVariable final String userId) {
         keyspaceRepository.useKeyspace("test");
-        return userRepo.last10(UUID.fromString(userId));
+        return articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId)).toString();
     }
 }

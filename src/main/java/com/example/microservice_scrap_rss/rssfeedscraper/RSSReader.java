@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RSSReader {
 
@@ -25,7 +27,7 @@ public class RSSReader {
     }
 
     private static Answer mapToArticle(SyndEntry entry){
-        return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor());
+        return new Answer(UUID.randomUUID(),entry.getTitle(),entry.getDescription().getValue(),entry.getUpdatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),entry.getLink());
     }
 
     public static void main(String[] args) throws IOException, FeedException {

@@ -1,31 +1,44 @@
 package com.example.microservice_scrap_rss.rssfeedscraper;
 
-public record Answer(String title, String description, String author) {
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.UUID;
+
+public record Answer(UUID id , String title, String description, LocalDate pubDate, String link) {
+
 
     @Override
     public String toString() {
-        if (author == null)
-            return description + "@" + title + " : Not found";
-        else
-            return description + "@" + title + " : " + author;
+        return "{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", pubDate=" + pubDate +
+                ", link='" + link + '\'' +
+                '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Answer)) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Answer answer = (Answer) o;
 
+        if (!id.equals(answer.id)) return false;
         if (!title.equals(answer.title)) return false;
         if (!description.equals(answer.description)) return false;
-        return author != null ? author.equals(answer.author) : answer.author == null;
+        if (!pubDate.equals(answer.pubDate)) return false;
+        return link.equals(answer.link);
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
+        int result = id.hashCode();
+        result = 31 * result + title.hashCode();
         result = 31 * result + description.hashCode();
-        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + pubDate.hashCode();
+        result = 31 * result + link.hashCode();
         return result;
     }
 }

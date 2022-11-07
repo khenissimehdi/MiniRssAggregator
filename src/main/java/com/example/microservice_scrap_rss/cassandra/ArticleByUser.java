@@ -20,4 +20,13 @@ public class ArticleByUser {
         this.articleId = articleId;
         this.insertTime = insertTime;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "userId=" + userId +
+                ", articleId=" + articleId +
+                ", insertTime=" + insertTime +
+                '}';
+    }
 }

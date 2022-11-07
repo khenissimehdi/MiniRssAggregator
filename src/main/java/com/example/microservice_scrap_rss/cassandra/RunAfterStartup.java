@@ -5,7 +5,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Component
@@ -23,29 +22,44 @@ public class RunAfterStartup {
     private FeedByUserRepo feedByUserRepo;
 
     @Autowired
-    private ArticleByUserRepo articlebRepo;
+    private ArticleByUserRepo articleByUserRepo;
 
     @Autowired
     private FeedRepo feedRepo;
 
+    private void createAll(){
+        // Keyspace
+        keyspaceRepository.createKeyspace("test", 1);
+        // Tables
+        createTables();
+    }
+    private void createTables(){
+        userRepo.createTable("test");
+        articleRepo.createTable("test");
+        feedByUserRepo.createTable("test");
+        articleByUserRepo.createTable("test");
+        feedRepo.createTable("test");
+    }
+    private void testInsert(){
+//        var us=userRepo.insertUser();
+        var us =UUID.fromString("d1e4f26a-8e6a-4e2b-9730-967a20bf85d7");
+//        var a = articleRepo.insertArticle("title","desc");
+//        articleByUserRepo.insertArticleToUser(us,a);
+//        feedRepo.insertFeed("www.zebi.com");
+//        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"), UUID.randomUUID());
+        var c = articleByUserRepo.getLast10ArticlesOf(us);
+        c.forEach(System.out::println);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-      // keyspaceRepository.createKeyspace("test", 1);
-       keyspaceRepository.useKeyspace("test");
-//     userRepo.createTable("user");
-        //articlebRepo.createTable("test");
-       // articlebRepo.insertArticle();
-       // feedByUserRepo.createTable("test");
-        articlebRepo.createTable("test");
-        articlebRepo.insertArticleToUser(UUID.randomUUID(),UUID.randomUUID());
-        feedRepo.createTable("test");
-        feedRepo.insertFeed("www.zebi.com");
-       // feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        //var c = articlebRepo.getLast10ArticlesOf(UUID.fromString("dd158d72-2341-4f70-b01a-dac85930cd61"));
-       // System.out.println(c.get(0).articleId);
-//        userRepo.insertUser();
-//        var article=articleRepo.insertArticle("test","desc test",".");
-//        userRepo.subscribe(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),article);
+        keyspaceRepository.useKeyspace("test");
+//        createAll();
+        testInsert();
+
+
+
+
     }
 
 

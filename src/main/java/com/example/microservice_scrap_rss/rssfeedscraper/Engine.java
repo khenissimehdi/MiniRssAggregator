@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class Engine {
@@ -43,7 +41,7 @@ public class Engine {
             SyndFeed feed = input.build(new XmlReader(request));
             List<Optional<Answer>> articles = new ArrayList<>();
            return () -> {
-                feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(e.getTitle(), e.getDescription().toString(), e.getAuthor()))));
+                feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(UUID.randomUUID(),e.getTitle(), e.getDescription().toString(), e.getUpdatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),e.getLink()))));
                 return articles;
             };
         } catch (FeedException | IOException e) {
@@ -52,7 +50,7 @@ public class Engine {
     }
 
     private static Answer mapToArticle(SyndEntry entry){
-        return new Answer(entry.getTitle(),entry.getDescription().getValue(),entry.getAuthor());
+        return new Answer(UUID.randomUUID(),entry.getTitle(),entry.getDescription().getValue(),entry.getUpdatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),entry.getLink());
     }
 
     private void initCalls() {

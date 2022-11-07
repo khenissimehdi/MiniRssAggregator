@@ -11,7 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootApplication()
 public class RssAggregatorApplication {
@@ -24,7 +27,7 @@ public class RssAggregatorApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(KafkaTemplate<String, List<Answer>> kafkaTemplate) {
-        var answer = new Answer("Lord of the Rings","Book about adventures","J.R.R Tolkien");
+        var answer = new Answer(UUID.randomUUID(),"Lord of the Rings","Book about adventures", LocalDate.now(),"google.fr");
         return args -> kafkaTemplate.send("rss", List.of(answer));
     }
 

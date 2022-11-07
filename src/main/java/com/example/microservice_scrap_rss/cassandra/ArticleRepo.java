@@ -48,9 +48,8 @@ public class ArticleRepo {
 
 
 
-    public UUID insertArticle(String title, String description) {
-        var id=UUID.randomUUID();
-        var a=new Article(id,title,description,java.time.LocalDate.now(),"/articles/"+id);
+    public UUID insertArticle(UUID id, String title, String description, LocalDate date, String link) {
+        var a=new Article(id,title,description,date,link);
         template.insert(a);
         return a.id();
     }

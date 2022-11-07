@@ -43,32 +43,15 @@ public class UserRepo {
                 .withColumn("listarticles", DataTypes.listOf(DataTypes.UUID));
         executeStatement(createTable.build(), keyspace);
     }
-
-
-
-    public void insertUser() {
-        template.insert(new User(UUID.randomUUID()));
+    public UUID insertUser() {
+        var id=UUID.randomUUID();
+        template.insert(new User(id));
+        return id;
     }
 
     public User getUserById(UUID uuid) {
         return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
     }
 
-    public void subscribe(UUID uuid,UUID idArticle){
-        User us=getUserById(uuid);
-        us.subscribe(idArticle);
-        template.update(us);
-    }
-
-    public String last10(UUID uuid) {
-        var sb=new StringBuilder();
-        sb.append("{\n");
-        var list = getUserById(uuid).last10();
-        for(var articleId : list){
-            sb.append(articleRepo.getArticleById(articleId)).append("\n");
-        }
-        sb.append("}");
-        return sb.toString();
-    }
 }
 
