@@ -15,8 +15,6 @@ import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,8 +52,8 @@ public class FeedByUserRepo {
         return a;
     }
 
-    public List<ArtcileByUser> getAllFeedsOf(UUID userId) {
+    public List<ArticleByUser> getAllFeedsOf(UUID userId) {
         // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArtcileByUser.class);
+        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArticleByUser.class);
     }
 }

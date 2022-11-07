@@ -8,19 +8,16 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Columns;
 import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,14 +51,14 @@ public class ArticleByUserRepo {
 
 
 
-    public ArtcileByUser insertArticleToUser(UUID userId, UUID articleId) {
-        var a= new ArtcileByUser(userId,articleId,Timestamp.from(Instant.now()));
+    public ArticleByUser insertArticleToUser(UUID userId, UUID articleId) {
+        var a= new ArticleByUser(userId,articleId,Timestamp.from(Instant.now()));
         template.insert(a);
         return a;
     }
 
-    public List<ArtcileByUser> getLast10ArticlesOf(UUID userId) {
+    public List<ArticleByUser> getLast10ArticlesOf(UUID userId) {
         // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArtcileByUser.class);
+        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArticleByUser.class);
     }
 }

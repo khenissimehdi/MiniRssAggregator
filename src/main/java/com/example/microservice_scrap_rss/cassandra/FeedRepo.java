@@ -52,8 +52,8 @@ public class FeedRepo {
         return a;
     }
 
-    public List<ArtcileByUser> getAllFeedsOf(UUID userId) {
+    public List<ArticleByUser> getAllFeedsOf(UUID userId) {
         // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArtcileByUser.class);
+        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArticleByUser.class);
     }
 }
