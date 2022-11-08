@@ -52,8 +52,7 @@ public class FeedByUserRepo {
         return a;
     }
 
-    public List<ArticleByUser> getAllFeedsOf(UUID userId) {
-        // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArticleByUser.class);
+    public List<FeedByUser> getAllFeedsOf(UUID userId) {
+        return template.select(Query.query(Criteria.where("userid").is(userId)), FeedByUser.class);
     }
 }

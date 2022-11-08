@@ -49,8 +49,7 @@ public class ArticleByUserRepo {
         executeStatement(createTable.build(), keyspace);
     }
 
-
-
+    
     public ArticleByUser insertArticleToUser(UUID userId, UUID articleId) {
         var a= new ArticleByUser(userId,articleId,Timestamp.from(Instant.now()));
         template.insert(a);

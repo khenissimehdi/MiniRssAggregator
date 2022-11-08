@@ -54,9 +54,6 @@ public class RunAfterStartup {
 //        var a = articleRepo.insertArticle("title","desc");
 //        articleByUserRepo.insertArticleToUser(us,a);
 //        feedRepo.insertFeed("www.zebi.com");
-//        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"), UUID.randomUUID());
-        var c = articleByUserRepo.getLast10ArticlesOf(us);
-        c.forEach(System.out::println);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -65,6 +62,14 @@ public class RunAfterStartup {
         keyspaceRepository.useKeyspace("test");
         createTables();
         //testInsert();
+        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+
+
+        var feeds = feedByUserRepo.getAllFeedsOf(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"));
+        //var c = articleByUserRepo.getLast10ArticlesOf(us);;
+        feeds.forEach(System.out::println);
         List<Answer> list= new ArrayList<>();
         list.add(new Answer(UUID.randomUUID(),"Lord zebi the Rings","Book about adventures", LocalDate.now(),"google.fr"));
 
