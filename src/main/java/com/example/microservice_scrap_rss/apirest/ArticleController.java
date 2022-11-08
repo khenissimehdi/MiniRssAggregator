@@ -43,8 +43,8 @@ public class ArticleController {
 //        return articleRepo.insertArticle(title, description).toString();
 //    }
 
-    @PostMapping
-    public void save(@RequestBody ArticleRequest request){
-        kafkaTemplate.send("rss",List.of(request.answer()));
+    @PostMapping(value = "/save")
+    public void save(@RequestBody ArrayList<Answer> request){
+        kafkaTemplate.send("rss",request);
     }
 }

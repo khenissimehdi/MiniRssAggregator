@@ -25,11 +25,11 @@ public class RssAggregatorApplication {
         SpringApplication.run(RssAggregatorApplication.class, args);
     }
 
-    @Bean
+  /*  @Bean
     CommandLineRunner commandLineRunner(KafkaTemplate<String, List<Answer>> kafkaTemplate) {
         var answer = new Answer(UUID.randomUUID(),"Lord of the Rings","Book about adventures", LocalDate.now(),"google.fr");
         return args -> kafkaTemplate.send("rss", List.of(answer));
-    }
+    }*/
 
 //    @Bean
 //    CommandLineRunner commandLineRunner() {

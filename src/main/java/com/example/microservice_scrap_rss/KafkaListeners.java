@@ -23,8 +23,11 @@ public class KafkaListeners {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>(){});
-        System.out.println("GOT :" + participantJsonList);
-        for(var item : participantJsonList)
-            articleRepo.insertArticle(item.id(),item.title(),item.description(),item.pubDate(),item.link());
+
+
+        for(var item : participantJsonList) {
+            System.out.println(item.id() + " " + item.title() + " " + item.description() + " " + item.pubDate() + " " + item.link());
+        }
+
     }
 }

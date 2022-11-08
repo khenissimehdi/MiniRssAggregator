@@ -38,9 +38,10 @@ public class RunAfterStartup {
         // Keyspace
         keyspaceRepository.createKeyspace("test", 1);
         // Tables
-        createTables();
+
     }
     private void createTables(){
+
         userRepo.createTable("test");
         articleRepo.createTable("test");
         feedByUserRepo.createTable("test");
@@ -60,16 +61,19 @@ public class RunAfterStartup {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
+        createAll();
         keyspaceRepository.useKeyspace("test");
-//        createAll();
-        testInsert();
-        List<Article> list= new ArrayList<>();
-        list.add(new Article(UUID.randomUUID(),"lodazaringu","thisisadesc", LocalDate.now(),"hereisthelink"));
-        RestTemplate restTemplate=new RestTemplate();
+        createTables();
+        //testInsert();
+        List<Answer> list= new ArrayList<>();
+        list.add(new Answer(UUID.randomUUID(),"Lord zebi the Rings","Book about adventures", LocalDate.now(),"google.fr"));
+
+
+        RestTemplate restTemplate= new RestTemplate();
+
         var response=restTemplate.postForObject(
-                "http://localhost:8080/api/v1/articles/",
-                list, Answer.class);
-        assert response != null;
+                "http://localhost:8080/api/v1/articles/save",
+                list, Answer[].class);
         System.out.println(response);
 
 
