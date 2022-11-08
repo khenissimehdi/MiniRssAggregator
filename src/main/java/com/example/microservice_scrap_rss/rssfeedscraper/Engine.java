@@ -26,6 +26,10 @@ public class Engine {
         this.executorService = Executors.newFixedThreadPool(poolSize);
     }
 
+    public static Engine createEngineFromList(ArrayList<String> sites, int timeoutMilliGlobal, int poolSize) {
+        return new Engine(sites,timeoutMilliGlobal,poolSize);
+    }
+
     public static Engine createEngineFromFile(Path path,  int timeoutMilliGlobal, int poolSize) throws IOException {
         Objects.requireNonNull(path);
         var sites = Files.readAllLines(path);

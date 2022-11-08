@@ -37,11 +37,6 @@ public class ArticleController {
         var article = articleRepo.getArticleById(UUID.fromString(articleId));
         return article.toString();
     }
-//    @PostMapping("/insert/{title}+{description}")
-//    String postArticle(@ModelAttribute  final String title,@ModelAttribute  final String description) {
-//        keyspaceRepository.useKeyspace("test");
-//        return articleRepo.insertArticle(title, description).toString();
-//    }
 
     @PostMapping(value = "/save")
     public void save(@RequestBody ArrayList<Answer> request){

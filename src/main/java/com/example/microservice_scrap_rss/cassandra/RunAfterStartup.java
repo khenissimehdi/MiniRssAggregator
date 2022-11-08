@@ -1,6 +1,7 @@
 package com.example.microservice_scrap_rss.cassandra;
 
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
+import com.example.microservice_scrap_rss.rssfeedscraper.Engine;
 import kotlin.collections.ArrayDeque;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +71,22 @@ public class RunAfterStartup {
 
         var feeds = feedByUserRepo.getAllFeedsOf(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"));
         //var c = articleByUserRepo.getLast10ArticlesOf(us);;
+
+
         feeds.forEach(System.out::println);
+
+        feedByUserRepo.removeFeedFromUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"), UUID.fromString("265acc9c-95b5-44e6-950d-5ee5e25f1ba3"));
         List<Answer> list= new ArrayList<>();
         list.add(new Answer(UUID.randomUUID(),"Lord zebi the Rings","Book about adventures", LocalDate.now(),"google.fr"));
 
+        feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
+        //var listofeed = feedRepo
 
         RestTemplate restTemplate= new RestTemplate();
+        var aggregator = Engine.createEngineFromList(,400,150);
+        //var answer = aggregator.retrieve();
 
-        var response=restTemplate.postForObject(
+        var response= restTemplate.postForObject(
                 "http://localhost:8080/api/v1/articles/save",
                 list, Answer[].class);
         System.out.println(response);

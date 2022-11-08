@@ -46,8 +46,6 @@ public class ArticleRepo {
         executeStatement(createTable.build(), keyspace);
     }
 
-
-
     public UUID insertArticle(UUID id, String title, String description, LocalDate date, String link) {
         var a=new Article(id,title,description,date,link);
         template.insert(a);

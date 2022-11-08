@@ -6,14 +6,19 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.net.URL;
 import java.util.UUID;
-
-//TODO CLEAN THE CODE
 @Table
 public class Feed {
     @PrimaryKey
     private final UUID feedId;
-    public final String feedLink;
+    private final String feedLink;
 
+    public UUID getFeedId() {
+        return feedId;
+    }
+
+    public String getFeedLink() {
+        return feedLink;
+    }
 
     public Feed(UUID feedId, String feedLink) {
         this.feedId = feedId;

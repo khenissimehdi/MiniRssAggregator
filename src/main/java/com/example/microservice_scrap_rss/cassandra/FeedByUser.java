@@ -12,7 +12,16 @@ import java.util.UUID;
 public class FeedByUser {
     @PrimaryKey
     private final UUID userId;
-    public final UUID feedId;
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public UUID getFeedId() {
+        return feedId;
+    }
+
+    private final UUID feedId;
 
 
     public FeedByUser(UUID userId, UUID feedId) {

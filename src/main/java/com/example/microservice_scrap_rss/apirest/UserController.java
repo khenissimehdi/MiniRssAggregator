@@ -3,22 +3,15 @@ package com.example.microservice_scrap_rss.apirest;
 import com.example.microservice_scrap_rss.cassandra.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "api/v1/users/")
 public class UserController {
-
-    private final Gson gson = new Gson();
 
     @Autowired
     private KeyspaceRepository keyspaceRepository;

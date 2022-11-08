@@ -25,8 +25,7 @@ import java.util.UUID;
 public class ArticleByUserRepo {
     private final CqlSession session;
     private final CassandraOperations template;
-
-
+    
     public ArticleByUserRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
@@ -57,7 +56,6 @@ public class ArticleByUserRepo {
     }
 
     public List<ArticleByUser> getLast10ArticlesOf(UUID userId) {
-        // To do sorting
         return template.select(Query.query(Criteria.where("userid").is(userId)).limit(10), ArticleByUser.class);
     }
     public ArticleByUser getArticleByUserById(UUID uuid) {

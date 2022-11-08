@@ -1,6 +1,8 @@
 package com.example.microservice_scrap_rss.cassandra;
 
+import static com.datastax.driver.core.querybuilder.QueryBuilder.bindMarker;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
 import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.oss.driver.api.core.CqlIdentifier;
@@ -59,18 +61,15 @@ public class FeedByUserRepo {
     }
 
     public void removeFeedFromUser(UUID userId, UUID feedID) {
-        //var feed = template.selectOne(Query.query(Criteria.where("userid").is(userId)).and(Criteria.where("feedid").is(feedID)),  FeedByUser.class);
-       // assert feed != null
-
-        template.delete(Query.query(Criteria.where("userid").is(userId)));
-
-
-       // System.out.println(feed.feedId);
-      //  template.delete(feed);
+        var delete =  QueryBuilder.deleteFrom("test","feedbyuser")
+                .whereColumn("userId")
+                .isEqualTo(literal(userId)).
+                whereColumn("feedid").
+                isEqualTo(literal(feedID));
+        executeStatement(delete.build(), "test");
     }
 
-    public List<ArtcileByUser> getAllFeedsOf(UUID userId) {
-        // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("feedid")).limit(10), ArtcileByUser.class);
+    public List<FeedByUser> getAllFeedsOf(UUID userId) {
+        return template.select(Query.query(Criteria.where("userid").is(userId)), FeedByUser.class);
     }
 }

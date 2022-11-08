@@ -7,7 +7,6 @@ import java.util.*;
 
 @Table
 public class User {
-
     @PrimaryKey
     private final UUID id;
 
@@ -18,6 +17,4 @@ public class User {
     public UUID getId() {
         return id;
     }
-
-
 }

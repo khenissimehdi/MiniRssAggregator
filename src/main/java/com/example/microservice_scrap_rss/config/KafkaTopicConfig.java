@@ -11,4 +11,5 @@ public class KafkaTopicConfig {
     public NewTopic scrapTopic() {
         return TopicBuilder.name("rss").build();
     }
+
 }
