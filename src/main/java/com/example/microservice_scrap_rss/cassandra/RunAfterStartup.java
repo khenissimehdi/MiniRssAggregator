@@ -1,10 +1,17 @@
 package com.example.microservice_scrap_rss.cassandra;
 
+import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
+import kotlin.collections.ArrayDeque;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -56,7 +63,14 @@ public class RunAfterStartup {
         keyspaceRepository.useKeyspace("test");
 //        createAll();
         testInsert();
-
+        List<Article> list= new ArrayList<>();
+        list.add(new Article(UUID.randomUUID(),"lodazaringu","thisisadesc", LocalDate.now(),"hereisthelink"));
+        RestTemplate restTemplate=new RestTemplate();
+        var response=restTemplate.postForObject(
+                "http://localhost:8080/api/v1/articles/",
+                list, Answer.class);
+        assert response != null;
+        System.out.println(response);
 
 
 
