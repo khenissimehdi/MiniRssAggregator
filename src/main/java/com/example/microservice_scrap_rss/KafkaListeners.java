@@ -28,6 +28,9 @@ public class KafkaListeners {
     private FeedRepo feedRepo;
 
     @Autowired
+    private FeedByArticleRepo feedByArticleRepo;
+
+    @Autowired
     private FeedByUserRepo feedByUserRepo;
     @KafkaListener(topics = "rss", groupId = "rss_group_id")
     void listener(String data) throws JsonProcessingException {
@@ -37,11 +40,19 @@ public class KafkaListeners {
         List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>(){});
 
         var users = userRepo.getAllUsers();
-        //var ) = feedByUserRepo.getAllFeedsOf(UUID.randomUUID());
+        users.forEach(user -> {
+            var feedsOfUser = feedByUserRepo.getAllFeedsOf(user.getId());
+            feedsOfUser.forEach(feed -> {
+               var articlesByFeed = feedByArticleRepo.getArticleByFeedID(feed.getFeedId());
+                System.out.println("hello " + feed.getFeedId());
+               articlesByFeed.forEach(articles -> {
+                   articleByUserRepo.insertArticleToUser(user.getId(),articles.getArticleId());
+               });
+            });
+        });
 
-
+        // Insert Articles
         for(var item : participantJsonList) {
-            articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),item.id());
             articleRepo.insertArticle(item.id(),item.title(),item.description(), item.pubDate(),item.link());
         }
 

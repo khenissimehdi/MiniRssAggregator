@@ -6,7 +6,6 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.UUID;
 
-//TODO CLEAN THE CODE
 @Table
 public class FeedByArticle {
     @PrimaryKey
