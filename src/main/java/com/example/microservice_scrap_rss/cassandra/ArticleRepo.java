@@ -8,6 +8,7 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.example.microservice_scrap_rss.ProjectConstants;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Criteria;
@@ -37,7 +38,7 @@ public class ArticleRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTable createTable = SchemaBuilder.createTable("article").ifNotExists()
+        CreateTable createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_ARTICLE.env()).ifNotExists()
                 .withPartitionKey("id", DataTypes.UUID)
                 .withColumn("title", DataTypes.TEXT)
                 .withColumn("description", DataTypes.TEXT)

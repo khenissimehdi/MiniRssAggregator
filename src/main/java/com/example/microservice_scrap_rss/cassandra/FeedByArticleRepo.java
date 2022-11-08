@@ -7,6 +7,7 @@ import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.example.microservice_scrap_rss.ProjectConstants;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Criteria;
@@ -36,7 +37,7 @@ public class FeedByArticleRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTableWithOptions createTable = SchemaBuilder.createTable("articlebyuser").ifNotExists()
+        CreateTableWithOptions createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_FEED_BY_ARTICLE.env()).ifNotExists()
                 .withPartitionKey("feedId", DataTypes.UUID)
                 .withPartitionKey("articleId", DataTypes.UUID);
         executeStatement(createTable.build(), keyspace);

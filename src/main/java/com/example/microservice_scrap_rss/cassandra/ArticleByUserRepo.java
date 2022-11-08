@@ -9,6 +9,7 @@ import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.example.microservice_scrap_rss.ProjectConstants;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Columns;
@@ -40,7 +41,7 @@ public class ArticleByUserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTableWithOptions createTable = SchemaBuilder.createTable("articlebyuser").ifNotExists()
+        CreateTableWithOptions createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_ARTICLE_BY_USER.env()).ifNotExists()
                 .withPartitionKey("userId", DataTypes.UUID)
                 .withPartitionKey("articleId", DataTypes.UUID)
                 .withClusteringColumn("inserttime", DataTypes.TIMESTAMP).

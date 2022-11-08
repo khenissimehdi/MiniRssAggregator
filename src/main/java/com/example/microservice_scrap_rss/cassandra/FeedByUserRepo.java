@@ -47,7 +47,7 @@ public class FeedByUserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTable createTable = SchemaBuilder.createTable("feedbyuser").ifNotExists()
+        CreateTable createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_FEED_BY_USER.env()).ifNotExists()
                 .withPartitionKey("userId", DataTypes.UUID)
                 .withClusteringColumn("feedId", DataTypes.UUID);
         executeStatement(createTable.build(), keyspace);
