@@ -44,16 +44,15 @@ public class FeedRepo {
         executeStatement(createTable.build(), keyspace);
     }
 
-
-
-    public Feed insertFeed(String feedLink) {
-        var a  = new Feed(UUID.randomUUID(),feedLink);
+    public UUID insertFeed(String feedLink) {
+        var id = UUID.randomUUID();
+        var a  = new Feed(id,feedLink);
         template.insert(a);
-        return a;
+        return id;
     }
 
-    public List<ArtcileByUser> getAllFeedsOf(UUID userId) {
-        // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArtcileByUser.class);
+    public void delete(UUID feedId) {
+        template.delete(Query.query(Criteria.where("feedid").is(feedId)));
     }
+
 }

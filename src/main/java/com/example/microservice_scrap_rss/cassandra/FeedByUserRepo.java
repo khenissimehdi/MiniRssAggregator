@@ -1,12 +1,16 @@
 package com.example.microservice_scrap_rss.cassandra;
 
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
 
+import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
+import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
@@ -54,8 +58,19 @@ public class FeedByUserRepo {
         return a;
     }
 
+    public void removeFeedFromUser(UUID userId, UUID feedID) {
+        //var feed = template.selectOne(Query.query(Criteria.where("userid").is(userId)).and(Criteria.where("feedid").is(feedID)),  FeedByUser.class);
+       // assert feed != null
+
+        template.delete(Query.query(Criteria.where("userid").is(userId)));
+
+
+       // System.out.println(feed.feedId);
+      //  template.delete(feed);
+    }
+
     public List<ArtcileByUser> getAllFeedsOf(UUID userId) {
         // To do sorting
-        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("articleid")).limit(10), ArtcileByUser.class);
+        return template.select(Query.query(Criteria.where("userid").is(userId)).columns(Columns.from("feedid")).limit(10), ArtcileByUser.class);
     }
 }

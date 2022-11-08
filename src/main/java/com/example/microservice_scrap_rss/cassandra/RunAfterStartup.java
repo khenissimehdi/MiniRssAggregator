@@ -32,21 +32,31 @@ public class RunAfterStartup {
     public void runAfterStartup() {
       // keyspaceRepository.createKeyspace("test", 1);
        keyspaceRepository.useKeyspace("test");
-//     userRepo.createTable("user");
+      // userRepo.createTable("user");
         //articlebRepo.createTable("test");
        // articlebRepo.insertArticle();
        // feedByUserRepo.createTable("test");
-        articlebRepo.createTable("test");
-        articlebRepo.insertArticleToUser(UUID.randomUUID(),UUID.randomUUID());
-        feedRepo.createTable("test");
-        feedRepo.insertFeed("www.zebi.com");
-       // feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        //var c = articlebRepo.getLast10ArticlesOf(UUID.fromString("dd158d72-2341-4f70-b01a-dac85930cd61"));
+       // articlebRepo.createTable("test");
+
+        //articlebRepo.insertArticleToUser(UUID.randomUUID(),UUID.randomUUID());
+
+       // feedRepo.createTable("test");
+       // feedRepo.insertFeed("www.zebi.com");
+        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+
+        //feedByUserRepo.removeFeedFromUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.fromString("32988007-87c3-4f3c-bd74-b9b319d3df89"));
+       //var c = articlebRepo.getLast10ArticlesOf(UUID.fromString("dd158d72-2341-4f70-b01a-dac85930cd61"));
        // System.out.println(c.get(0).articleId);
 //        userRepo.insertUser();
 //        var article=articleRepo.insertArticle("test","desc test",".");
 //        userRepo.subscribe(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),article);
     }
+
+
+
 
 
 }
