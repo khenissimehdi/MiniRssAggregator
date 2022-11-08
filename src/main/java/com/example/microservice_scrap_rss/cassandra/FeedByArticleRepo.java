@@ -1,31 +1,28 @@
 package com.example.microservice_scrap_rss.cassandra;
 
-
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Repository
-public class UserRepo {
+public class FeedByArticleRepo {
     private final CqlSession session;
     private final CassandraOperations template;
 
-    @Autowired
-    private ArticleRepo articleRepo;
-    public UserRepo(CqlSession session) {
+    public FeedByArticleRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
     }
@@ -39,23 +36,18 @@ public class UserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTable createTable = SchemaBuilder.createTable("user").ifNotExists()
-                .withPartitionKey("id", DataTypes.UUID);
+        CreateTableWithOptions createTable = SchemaBuilder.createTable("articlebyuser").ifNotExists()
+                .withPartitionKey("feedId", DataTypes.UUID)
+                .withPartitionKey("articleId", DataTypes.UUID);
         executeStatement(createTable.build(), keyspace);
     }
-    public UUID insertUser() {
-        var id=UUID.randomUUID();
-        template.insert(new User(id));
-        return id;
-    }
 
-    public List<User> getAllUsers() {
-        return template.select("SELECT * FROM user;",User.class);
+    public FeedByArticle insertArticleToFeed(UUID feedId, UUID articleId) {
+        var a= new FeedByArticle(feedId,articleId);
+        template.insert(a);
+        return a;
     }
-
-    public User getUserById(UUID uuid) {
-        return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
+    public FeedByArticle getArticleByFeedID(UUID feedId) {
+        return template.selectOne(Query.query(Criteria.where("feedId").is(feedId)), FeedByArticle.class);
     }
-
 }
-

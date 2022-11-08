@@ -59,6 +59,6 @@ public class ArticleByUserRepo {
         return template.select(Query.query(Criteria.where("userid").is(userId)).limit(10), ArticleByUser.class);
     }
     public ArticleByUser getArticleByUserById(UUID uuid) {
-        return template.selectOne(Query.query(Criteria.where("id").is(uuid)), ArticleByUser.class);
+        return template.selectOne(Query.query(Criteria.where("userid").is(uuid)), ArticleByUser.class);
     }
 }
