@@ -1,5 +1,6 @@
 package com.example.microservice_scrap_rss.apirest;
 
+import com.example.microservice_scrap_rss.ProjectConstants;
 import com.example.microservice_scrap_rss.cassandra.Article;
 import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
@@ -33,7 +34,7 @@ public class ArticleController {
     @RequestMapping(value = "/{articleId}", method = RequestMethod.GET)
     @ResponseBody
     String getArticleById(@PathVariable final String articleId) {
-        keyspaceRepository.useKeyspace("test");
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var article = articleRepo.getArticleById(UUID.fromString(articleId));
         return article.toString();
     }

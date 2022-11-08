@@ -14,6 +14,7 @@ import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.relation.Relation;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
+import com.example.microservice_scrap_rss.ProjectConstants;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.core.query.Columns;
@@ -61,12 +62,12 @@ public class FeedByUserRepo {
     }
 
     public void removeFeedFromUser(UUID userId, UUID feedID) {
-        var delete =  QueryBuilder.deleteFrom("test","feedbyuser")
+        var delete =  QueryBuilder.deleteFrom(ProjectConstants.KEYSPACE.env(),"feedbyuser")
                 .whereColumn("userId")
                 .isEqualTo(literal(userId)).
                 whereColumn("feedid").
                 isEqualTo(literal(feedID));
-        executeStatement(delete.build(), "test");
+        executeStatement(delete.build(), ProjectConstants.KEYSPACE.env());
     }
 
     public List<FeedByUser> getAllFeedsOf(UUID userId) {

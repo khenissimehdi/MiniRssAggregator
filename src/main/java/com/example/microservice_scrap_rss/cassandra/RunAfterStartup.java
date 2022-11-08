@@ -1,5 +1,6 @@
 package com.example.microservice_scrap_rss.cassandra;
 
+import com.example.microservice_scrap_rss.ProjectConstants;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 import com.example.microservice_scrap_rss.rssfeedscraper.Engine;
 import kotlin.collections.ArrayDeque;
@@ -36,17 +37,16 @@ public class RunAfterStartup {
 
     private void createAll(){
         // Keyspace
-        keyspaceRepository.createKeyspace("test", 1);
+        keyspaceRepository.createKeyspace(ProjectConstants.KEYSPACE.env(), 1);
         // Tables
 
     }
     private void createTables(){
-
-        userRepo.createTable("test");
-        articleRepo.createTable("test");
-        feedByUserRepo.createTable("test");
-        articleByUserRepo.createTable("test");
-        feedRepo.createTable("test");
+        userRepo.createTable(ProjectConstants.KEYSPACE.env());
+        articleRepo.createTable(ProjectConstants.KEYSPACE.env());
+        feedByUserRepo.createTable(ProjectConstants.KEYSPACE.env());
+        articleByUserRepo.createTable(ProjectConstants.KEYSPACE.env());
+        feedRepo.createTable(ProjectConstants.KEYSPACE.env());
     }
     private void testInsert(){
 //        var us=userRepo.insertUser();
@@ -59,7 +59,7 @@ public class RunAfterStartup {
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() throws InterruptedException {
         createAll();
-        keyspaceRepository.useKeyspace("test");
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         createTables();
         //testInsert();
         //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());

@@ -1,5 +1,6 @@
 package com.example.microservice_scrap_rss.apirest;
 
+import com.example.microservice_scrap_rss.ProjectConstants;
 import com.example.microservice_scrap_rss.cassandra.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ public class UserController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     @ResponseBody
     String getUserById(@PathVariable final String userId) throws JsonProcessingException {
-        keyspaceRepository.useKeyspace("test");
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         return objectMapper.writeValueAsString(userRepo.getUserById(UUID.fromString(userId)));
@@ -42,7 +43,7 @@ public class UserController {
     @RequestMapping(value = "/last10/{userId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     String getLast10OfUser(@PathVariable final String userId) throws JsonProcessingException {
-        keyspaceRepository.useKeyspace("test");
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var list = articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId));
         var arr = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
