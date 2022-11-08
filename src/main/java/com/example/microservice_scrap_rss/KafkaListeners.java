@@ -1,8 +1,6 @@
 package com.example.microservice_scrap_rss;
 
-import com.example.microservice_scrap_rss.cassandra.Article;
-import com.example.microservice_scrap_rss.cassandra.ArticleByUserRepo;
-import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
+import com.example.microservice_scrap_rss.cassandra.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +20,15 @@ public class KafkaListeners {
     private ArticleRepo articleRepo;
 
     @Autowired
+    private UserRepo userRepo;
+    @Autowired
     private ArticleByUserRepo articleByUserRepo;
+
+    @Autowired
+    private FeedRepo feedRepo;
+
+    @Autowired
+    private FeedByUserRepo feedByUserRepo;
     @KafkaListener(topics = "rss", groupId = "rss_group_id")
     void listener(String data) throws JsonProcessingException {
         System.out.println("Listener received "+data+ " . Has been consumed!!!");
@@ -30,11 +36,13 @@ public class KafkaListeners {
         mapper.findAndRegisterModules();
         List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>(){});
 
+        var users = userRepo.getAllUsers();
+        //var ) = feedByUserRepo.getAllFeedsOf(UUID.randomUUID());
+
 
         for(var item : participantJsonList) {
             articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),item.id());
             articleRepo.insertArticle(item.id(),item.title(),item.description(), item.pubDate(),item.link());
-            System.out.println(item.id() + " " + item.title() + " " + item.description() + " " + item.pubDate() + " " + item.link());
         }
 
     }

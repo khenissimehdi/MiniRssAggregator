@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
-import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.selectFrom;
 
 @Repository
 public class FeedRepo {
@@ -55,10 +54,9 @@ public class FeedRepo {
         return id;
     }
 
-   /* public Feed getAllFeeds() {
-        executeStatement(selectUser,"test");
-
-    }*/
+   public List<Feed> getAllFeeds() {
+        return template.select("SELECT * FROM feed;",Feed.class);
+    }
 
     public void delete(UUID feedId) {
         template.delete(Query.query(Criteria.where("feedid").is(feedId)));

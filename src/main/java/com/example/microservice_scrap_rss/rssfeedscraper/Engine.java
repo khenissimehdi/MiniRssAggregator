@@ -10,23 +10,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.*;
 
 public class Engine {
-    private final ArrayList<String> sites;
+    private final List<String> sites;
     private List<Callable<List<Optional<Answer>>>> callableList;
     private final int timeoutMilliGlobal;
     private final ExecutorService executorService;
 
-    private Engine(ArrayList<String> sites, int timeoutMilliGlobal, int poolSize) {
+    private Engine(List<String> sites, int timeoutMilliGlobal, int poolSize) {
         this.sites = sites;
         this.timeoutMilliGlobal = timeoutMilliGlobal;
         this.executorService = Executors.newFixedThreadPool(poolSize);
     }
 
-    public static Engine createEngineFromList(ArrayList<String> sites, int timeoutMilliGlobal, int poolSize) {
+    public static Engine createEngineFromList(List<String> sites, int timeoutMilliGlobal, int poolSize) {
         return new Engine(sites,timeoutMilliGlobal,poolSize);
     }
 
@@ -45,7 +46,16 @@ public class Engine {
             SyndFeed feed = input.build(new XmlReader(request));
             List<Optional<Answer>> articles = new ArrayList<>();
            return () -> {
-                feed.getEntries().forEach(e->articles.add(Optional.of(new Answer(UUID.randomUUID(),e.getTitle(), e.getDescription().toString(), e.getUpdatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),e.getLink()))));
+
+                feed.getEntries().forEach(e-> {
+                    var pubDate = LocalDate.ofInstant(e.getPublishedDate().toInstant(), ZoneId.systemDefault());
+                    articles.add(Optional.of(
+                            new Answer(UUID.randomUUID(),
+                            e.getTitle(),
+                            e.getDescription().getValue(),
+                           pubDate,e.getLink())));
+                }
+                );
                 return articles;
             };
         } catch (FeedException | IOException e) {
@@ -67,12 +77,14 @@ public class Engine {
             initCalls();
         var future = this.executorService.invokeAll(callableList, timeoutMilliGlobal, TimeUnit.MILLISECONDS);
         this.executorService.shutdown();
+
         future.forEach(e -> {
             try {
+
                 var answers = e.get();
                 list.addAll(answers);
             } catch (InterruptedException | ExecutionException ex) {
-                throw new AssertionError();
+                throw new AssertionError(ex.getMessage());
             }
         });
         return new ArrayList<>(list);

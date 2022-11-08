@@ -12,9 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class RunAfterStartup {
@@ -59,7 +57,7 @@ public class RunAfterStartup {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void runAfterStartup() {
+    public void runAfterStartup() throws InterruptedException {
         createAll();
         keyspaceRepository.useKeyspace("test");
         createTables();
@@ -80,18 +78,18 @@ public class RunAfterStartup {
         list.add(new Answer(UUID.randomUUID(),"Lord zebi the Rings","Book about adventures", LocalDate.now(),"google.fr"));
 
         feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
-        //var listofeed = feedRepo
+        var listofeed = feedRepo.getAllFeeds().stream().map(Feed::getFeedLink).toList();
+
+
 
         RestTemplate restTemplate= new RestTemplate();
-        var aggregator = Engine.createEngineFromList(,400,150);
-        //var answer = aggregator.retrieve();
+        var aggregator = Engine.createEngineFromList(listofeed,400,150);
+        var answer = aggregator.retrieve();
 
+        var arr = answer.stream().map(Optional::get).toList();
         var response= restTemplate.postForObject(
                 "http://localhost:8080/api/v1/articles/save",
-                list, Answer[].class);
-        System.out.println(response);
-
-
+        arr, Answer[].class);
 
     }
 

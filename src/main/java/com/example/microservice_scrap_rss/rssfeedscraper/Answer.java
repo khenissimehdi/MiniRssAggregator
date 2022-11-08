@@ -7,6 +7,7 @@ import java.util.UUID;
 public record Answer(UUID id , String title, String description, LocalDate pubDate, String link) {
 
 
+
     @Override
     public String toString() {
         return "{" +

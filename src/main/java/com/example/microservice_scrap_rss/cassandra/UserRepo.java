@@ -15,6 +15,7 @@ import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -47,6 +48,10 @@ public class UserRepo {
         var id=UUID.randomUUID();
         template.insert(new User(id));
         return id;
+    }
+
+    public List<User> getAllUsers() {
+        return template.select("SELECT * FROM user;",User.class);
     }
 
     public User getUserById(UUID uuid) {
