@@ -1,12 +1,9 @@
 package com.example.microservice_scrap_rss.apirest;
 
 import com.example.microservice_scrap_rss.ProjectConstants;
-import com.example.microservice_scrap_rss.cassandra.Article;
 import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
-import com.example.microservice_scrap_rss.cassandra.UserRepo;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
-import com.example.microservice_scrap_rss.rssfeedscraper.ArticleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;

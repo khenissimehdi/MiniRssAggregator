@@ -3,18 +3,19 @@ package com.example.microservice_scrap_rss.cassandra;
 import com.example.microservice_scrap_rss.ProjectConstants;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 import com.example.microservice_scrap_rss.rssfeedscraper.Engine;
-import kotlin.collections.ArrayDeque;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.file.Path;
-import java.time.LocalDate;
+
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class RunAfterStartup {
@@ -39,15 +40,20 @@ public class RunAfterStartup {
     @Autowired
     private FeedByArticleRepo feedByArticleRepo;
 
+    private final ArrayList<UUID> feedUUIDS = new ArrayList<>();
+    private final ArrayList<UUID>  usersUUIDS = new ArrayList<>();
+
     private void addFeeds() {
-        feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
-        feedRepo.insertFeed("https://feeds.fireside.fm/bibleinayear/rss");
+        var feed1 = feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
+        var feed2 = feedRepo.insertFeed("https://feeds.fireside.fm/bibleinayear/rss");
+        feedUUIDS.add(feed1);
+        feedUUIDS.add(feed2);
     }
 
+
+
     private void addUsers() {
-        userRepo.insertUser();
-        userRepo.insertUser();
-        userRepo.insertUser();
+        IntStream.range(0,3).forEach(i ->  usersUUIDS.add(userRepo.insertUser()));
     }
     private void createTables(){
         userRepo.createTable(ProjectConstants.KEYSPACE.env());
@@ -56,48 +62,61 @@ public class RunAfterStartup {
         articleByUserRepo.createTable(ProjectConstants.KEYSPACE.env());
         feedRepo.createTable(ProjectConstants.KEYSPACE.env());
         feedByArticleRepo.createTable(ProjectConstants.KEYSPACE.env());
+    }
 
+
+    private void subUsersToRandomFeeds() {
+       usersUUIDS.forEach( uuid -> {
+           Random rand = new Random();
+           var randomUUID = feedUUIDS.get(rand.nextInt(feedUUIDS.size()));
+           feedByUserRepo.insertFeedToUser(uuid,randomUUID);
+       });
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void runAfterStartup() throws InterruptedException {
-        //keyspaceRepository.createKeyspace(ProjectConstants.KEYSPACE.env(), 1);
-        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
-        // createTables();
-        // addFeeds();
-        //addUsers();
-
-        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-
-
-       // var feeds = feedByUserRepo.getAllFeedsOf(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"));
-        //var c = articleByUserRepo.getLast10ArticlesOf(us);;
-
-      //  feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.fromString("bd8d11b1-1943-4550-b58e-8f556a7a782e"));
-       // feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.fromString("bd8d11b1-1943-4550-b58e-8f556a7a782e"));
-      //  feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.fromString("e3a0166d-5a2b-4f1a-a035-80368a28ea2f"));
-
-
-       // feedByUserRepo.removeFeedFromUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"), UUID.fromString("265acc9c-95b5-44e6-950d-5ee5e25f1ba3"));
-
-       // feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
-
-       scrapperSum();
-
+    public void runAfterStartup() {
+        if(!keyspaceRepository.checkIfKeySpaceIsUsed()) {
+            initCassandra();
+            scrapperSum();
+        } else {
+            cassandraAlreadySet();
+        }
     }
 
-    private void scrapperSum() throws InterruptedException {
-        var lisToFeed = feedRepo.getAllFeeds();
-        RestTemplate restTemplate= new RestTemplate();
-        var aggregator = Engine.createEngineFromList(lisToFeed,feedByArticleRepo,4000,400);
-        var answer = aggregator.retrieve();
-        var arr = answer.stream().flatMap(Optional::stream).collect(Collectors.toList());
+    private void initCassandra() {
+        keyspaceRepository.createKeyspace(ProjectConstants.KEYSPACE.env(), 1);
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
+        createTables();
+        addFeeds();
+        addUsers();
+        subUsersToRandomFeeds();
+    }
 
-        restTemplate.postForObject(
-                "http://localhost:8080/api/v1/articles/save",
-        arr, Answer[].class);
+    private void cassandraAlreadySet() {
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
+        scrapperSum();
+    }
+
+    private void scrapperSum() {
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(() -> {
+            try {
+                System.out.println("GOING TO LAUNCH A SCRAP");
+                var lisToFeed = feedRepo.getAllFeeds();
+                RestTemplate restTemplate= new RestTemplate();
+                var aggregator = Engine.createEngineFromList(lisToFeed,feedByArticleRepo,4000,400);
+                List<Optional<Answer>> answer = aggregator.retrieve();
+                var arr = answer.stream().flatMap(Optional::stream).collect(Collectors.toList());
+
+                restTemplate.postForObject(
+                        ProjectConstants.API_URL_DEV.env(),
+                        arr, Answer[].class);
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
 

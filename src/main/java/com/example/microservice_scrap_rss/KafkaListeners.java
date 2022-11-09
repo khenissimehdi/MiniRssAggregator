@@ -54,5 +54,7 @@ public class KafkaListeners {
             articleRepo.insertArticle(item.id(),item.title(),item.description(), item.pubDate(),item.link());
         }
 
+        System.out.println("FINISHED SCRAP AND INSERTED IN DB");
+
     }
 }

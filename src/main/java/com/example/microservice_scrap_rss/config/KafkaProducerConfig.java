@@ -2,6 +2,7 @@ package com.example.microservice_scrap_rss.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -16,12 +17,18 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaProducerConfig {
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String serverValue;
     @Bean
     public ProducerFactory<String, ?> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 104857600);
+        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 104857600);
+        configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092");
+                serverValue);
         configProps.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
