@@ -1,16 +1,20 @@
 package com.example.microservice_scrap_rss.rssfeedscraper;
 
-import com.example.microservice_scrap_rss.cassandra.Feed;
-import com.example.microservice_scrap_rss.cassandra.FeedByArticleRepo;
+import com.example.microservice_scrap_rss.cassandra.entity.Feed;
+import com.example.microservice_scrap_rss.cassandra.repository.FeedByArticleRepo;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 public class Engine {

@@ -1,4 +1,4 @@
-package com.example.microservice_scrap_rss.cassandra;
+package com.example.microservice_scrap_rss.cassandra.repository;
 
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
@@ -9,6 +9,7 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
 import com.example.microservice_scrap_rss.ProjectConstants;
+import com.example.microservice_scrap_rss.cassandra.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;

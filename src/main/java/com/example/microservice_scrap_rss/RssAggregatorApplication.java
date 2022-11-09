@@ -3,18 +3,8 @@ package com.example.microservice_scrap_rss;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.core.KafkaTemplate;
-import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
-
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @SpringBootApplication()
 public class RssAggregatorApplication {

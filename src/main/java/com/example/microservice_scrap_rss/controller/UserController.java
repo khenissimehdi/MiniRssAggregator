@@ -1,12 +1,14 @@
-package com.example.microservice_scrap_rss.apirest;
+package com.example.microservice_scrap_rss.controller;
 
 import com.example.microservice_scrap_rss.ProjectConstants;
-import com.example.microservice_scrap_rss.cassandra.*;
+import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
+import com.example.microservice_scrap_rss.cassandra.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.UUID;
 

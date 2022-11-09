@@ -1,33 +1,33 @@
-package com.example.microservice_scrap_rss.cassandra;
-
+package com.example.microservice_scrap_rss.cassandra.repository;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
-import com.datastax.oss.driver.api.querybuilder.schema.CreateTableWithOptions;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateTable;
 import com.example.microservice_scrap_rss.ProjectConstants;
+import com.example.microservice_scrap_rss.cassandra.entity.FeedByUser;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.data.cassandra.core.CassandraTemplate;
-import org.springframework.data.cassandra.core.query.Columns;
 import org.springframework.data.cassandra.core.query.Criteria;
 import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
+
 @Repository
-public class ArticleByUserRepo {
+public class FeedByUserRepo {
     private final CqlSession session;
     private final CassandraOperations template;
-    
-    public ArticleByUserRepo(CqlSession session) {
+
+
+    public FeedByUserRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
     }
@@ -41,25 +41,30 @@ public class ArticleByUserRepo {
     }
 
     public void createTable(String keyspace) {
-        CreateTableWithOptions createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_ARTICLE_BY_USER.env()).ifNotExists()
+        CreateTable createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_FEED_BY_USER.env()).ifNotExists()
                 .withPartitionKey("userId", DataTypes.UUID)
-                .withColumn("articleId", DataTypes.UUID)
-                .withClusteringColumn("inserttime", DataTypes.TIMESTAMP).
-                withClusteringOrder("inserttime", ClusteringOrder.DESC);
+                .withClusteringColumn("feedId", DataTypes.UUID);
         executeStatement(createTable.build(), keyspace);
     }
 
-    
-    public ArticleByUser insertArticleToUser(UUID userId, UUID articleId) {
-        var a= new ArticleByUser(userId,articleId,Timestamp.from(Instant.now()));
+
+
+    public FeedByUser insertFeedToUser(UUID userId, UUID feedId) {
+        var a= new FeedByUser(userId,feedId);
         template.insert(a);
         return a;
     }
 
-    public List<ArticleByUser> getLast10ArticlesOf(UUID userId) {
-        return template.select(Query.query(Criteria.where("userid").is(userId)).limit(10), ArticleByUser.class);
+    public void removeFeedFromUser(UUID userId, UUID feedID) {
+        var delete =  QueryBuilder.deleteFrom(ProjectConstants.KEYSPACE.env(),"feedbyuser")
+                .whereColumn("userId")
+                .isEqualTo(literal(userId)).
+                whereColumn("feedid").
+                isEqualTo(literal(feedID));
+        executeStatement(delete.build(), ProjectConstants.KEYSPACE.env());
     }
-    public ArticleByUser getArticleByUserById(UUID uuid) {
-        return template.selectOne(Query.query(Criteria.where("userid").is(uuid)), ArticleByUser.class);
+
+    public List<FeedByUser> getAllFeedsOf(UUID userId) {
+        return template.select(Query.query(Criteria.where("userid").is(userId)), FeedByUser.class);
     }
 }

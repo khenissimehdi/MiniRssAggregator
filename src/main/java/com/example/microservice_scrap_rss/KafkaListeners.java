@@ -1,18 +1,15 @@
 package com.example.microservice_scrap_rss;
 
-import com.example.microservice_scrap_rss.cassandra.*;
+import com.example.microservice_scrap_rss.cassandra.entity.Article;
+import com.example.microservice_scrap_rss.cassandra.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 
-
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class KafkaListeners {

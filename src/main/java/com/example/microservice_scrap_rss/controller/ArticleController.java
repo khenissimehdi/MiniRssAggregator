@@ -1,8 +1,8 @@
-package com.example.microservice_scrap_rss.apirest;
+package com.example.microservice_scrap_rss.controller;
 
 import com.example.microservice_scrap_rss.ProjectConstants;
-import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
+import com.example.microservice_scrap_rss.cassandra.repository.ArticleRepo;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

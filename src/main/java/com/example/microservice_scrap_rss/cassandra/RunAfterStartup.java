@@ -1,6 +1,7 @@
 package com.example.microservice_scrap_rss.cassandra;
 
 import com.example.microservice_scrap_rss.ProjectConstants;
+import com.example.microservice_scrap_rss.cassandra.repository.*;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
 import com.example.microservice_scrap_rss.rssfeedscraper.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 
 import java.util.*;
 import java.util.concurrent.Executors;

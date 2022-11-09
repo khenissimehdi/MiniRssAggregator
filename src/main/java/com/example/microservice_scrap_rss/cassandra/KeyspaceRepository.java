@@ -34,6 +34,5 @@ public class KeyspaceRepository  {
           } catch (InvalidQueryException e) {
               return false;
           }
-
     }
 }

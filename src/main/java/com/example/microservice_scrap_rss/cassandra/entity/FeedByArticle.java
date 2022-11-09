@@ -1,27 +1,29 @@
-package com.example.microservice_scrap_rss.cassandra;
+package com.example.microservice_scrap_rss.cassandra.entity;
 
 
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.net.URL;
 import java.util.UUID;
+
 @Table
-public class Feed {
+public class FeedByArticle {
     @PrimaryKey
     private final UUID feedId;
-    private final String feedLink;
 
     public UUID getFeedId() {
         return feedId;
     }
 
-    public String getFeedLink() {
-        return feedLink;
+    public UUID getArticleId() {
+        return articleId;
     }
 
-    public Feed(UUID feedId, String feedLink) {
+    private final UUID articleId;
+
+
+    public FeedByArticle( UUID feedId,UUID articleId) {
         this.feedId = feedId;
-        this.feedLink = feedLink;
+        this.articleId = articleId;
     }
 }
