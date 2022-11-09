@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     private FeedRepo feedRepo;
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     String getUserById(@PathVariable final String userId) throws JsonProcessingException {
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
@@ -39,7 +39,6 @@ public class UserController {
         objectMapper.findAndRegisterModules();
         return objectMapper.writeValueAsString(userRepo.getUserById(UUID.fromString(userId)));
     }
-
 
     @PostMapping(value = "/subTo/{userId}/{feedId}")
     String subUserToFeed(@PathVariable final String userId,@PathVariable final String feedId) throws JsonProcessingException {
@@ -57,15 +56,14 @@ public class UserController {
 
     @RequestMapping(value = "/last10/{userId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    String getLast10OfUser(@PathVariable final String userId) throws JsonProcessingException {
+    String getLast1OArticleByUserId(@PathVariable final String userId) throws JsonProcessingException {
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var list = articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId));
         var arr = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        for(var item : list){
+        for(var item : list)
             arr.add(objectMapper.writeValueAsString(articleRepo.getArticleById(item.articleId)));
-        }
         return arr.toString();
     }
 }

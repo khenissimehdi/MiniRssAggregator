@@ -9,7 +9,7 @@ public enum ProjectConstants {
     TABLE_FEED_BY_ARTICLE("feedbyarticle"),
     TABLE_FEED_BY_USER("feedbyuser"),
 
-    API_URL_DEV("http://localhost:8080/api/v1/articles/save");
+    API_URL_DEV("http://localhost:8080/api/v1");
 
     private final String env;
 

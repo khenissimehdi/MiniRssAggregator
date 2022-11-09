@@ -4,7 +4,10 @@ import com.example.microservice_scrap_rss.ProjectConstants;
 import com.example.microservice_scrap_rss.cassandra.ArticleRepo;
 import com.example.microservice_scrap_rss.cassandra.KeyspaceRepository;
 import com.example.microservice_scrap_rss.rssfeedscraper.Answer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +31,14 @@ public class ArticleController {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @RequestMapping(value = "/{articleId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{articleId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    String getArticleById(@PathVariable final String articleId) {
+    String getArticleById(@PathVariable final String articleId) throws JsonProcessingException {
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var article = articleRepo.getArticleById(UUID.fromString(articleId));
-        return article.toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        return objectMapper.writeValueAsString(articleRepo.getArticleById(article.id()));
     }
 
     @PostMapping(value = "/save")

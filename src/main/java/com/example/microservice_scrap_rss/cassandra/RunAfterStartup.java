@@ -50,8 +50,6 @@ public class RunAfterStartup {
         feedUUIDS.add(feed2);
     }
 
-
-
     private void addUsers() {
         IntStream.range(0,3).forEach(i ->  usersUUIDS.add(userRepo.insertUser()));
     }
@@ -63,7 +61,6 @@ public class RunAfterStartup {
         feedRepo.createTable(ProjectConstants.KEYSPACE.env());
         feedByArticleRepo.createTable(ProjectConstants.KEYSPACE.env());
     }
-
 
     private void subUsersToRandomFeeds() {
        usersUUIDS.forEach( uuid -> {
@@ -109,15 +106,12 @@ public class RunAfterStartup {
                 var arr = answer.stream().flatMap(Optional::stream).collect(Collectors.toList());
 
                 restTemplate.postForObject(
-                        ProjectConstants.API_URL_DEV.env(),
+                        ProjectConstants.API_URL_DEV.env() + "/articles/save",
                         arr, Answer[].class);
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
         }, 0, 1, TimeUnit.MINUTES);
     }
-
-
 }
