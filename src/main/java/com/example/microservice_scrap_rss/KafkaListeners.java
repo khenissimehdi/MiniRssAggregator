@@ -34,7 +34,6 @@ public class KafkaListeners {
     private FeedByUserRepo feedByUserRepo;
     @KafkaListener(topics = "rss", groupId = "rss_group_id")
     void listener(String data) throws JsonProcessingException {
-        System.out.println("Listener received "+data+ " . Has been consumed!!!");
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>(){});
@@ -44,7 +43,6 @@ public class KafkaListeners {
             var feedsOfUser = feedByUserRepo.getAllFeedsOf(user.getId());
             feedsOfUser.forEach(feed -> {
                var articlesByFeed = feedByArticleRepo.getArticleByFeedID(feed.getFeedId());
-                System.out.println("hello " + feed.getFeedId());
                articlesByFeed.forEach(articles -> {
                    articleByUserRepo.insertArticleToUser(user.getId(),articles.getArticleId());
                });

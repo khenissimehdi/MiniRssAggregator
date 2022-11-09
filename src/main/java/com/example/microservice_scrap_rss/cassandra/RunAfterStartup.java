@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class RunAfterStartup {
@@ -38,11 +39,15 @@ public class RunAfterStartup {
     @Autowired
     private FeedByArticleRepo feedByArticleRepo;
 
-    private void createAll(){
-        // Keyspace
-        keyspaceRepository.createKeyspace(ProjectConstants.KEYSPACE.env(), 1);
-        // Tables
+    private void addFeeds() {
+        feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
+        feedRepo.insertFeed("https://feeds.fireside.fm/bibleinayear/rss");
+    }
 
+    private void addUsers() {
+        userRepo.insertUser();
+        userRepo.insertUser();
+        userRepo.insertUser();
     }
     private void createTables(){
         userRepo.createTable(ProjectConstants.KEYSPACE.env());
@@ -53,26 +58,21 @@ public class RunAfterStartup {
         feedByArticleRepo.createTable(ProjectConstants.KEYSPACE.env());
 
     }
-    private void testInsert(){
-//        var us=userRepo.insertUser();
-        var us =UUID.fromString("d1e4f26a-8e6a-4e2b-9730-967a20bf85d7");
-//        var a = articleRepo.insertArticle("title","desc");
-//        articleByUserRepo.insertArticleToUser(us,a);
-//        feedRepo.insertFeed("www.zebi.com");
-    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() throws InterruptedException {
-        createAll();
+        //keyspaceRepository.createKeyspace(ProjectConstants.KEYSPACE.env(), 1);
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
-        createTables();
-        //testInsert();
-        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
-        //articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        // createTables();
+        // addFeeds();
+        //addUsers();
+
+        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
+        // articleByUserRepo.insertArticleToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.randomUUID());
 
 
-        var feeds = feedByUserRepo.getAllFeedsOf(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"));
+       // var feeds = feedByUserRepo.getAllFeedsOf(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"));
         //var c = articleByUserRepo.getLast10ArticlesOf(us);;
 
       //  feedByUserRepo.insertFeedToUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"),UUID.fromString("bd8d11b1-1943-4550-b58e-8f556a7a782e"));
@@ -82,20 +82,22 @@ public class RunAfterStartup {
 
        // feedByUserRepo.removeFeedFromUser(UUID.fromString("dc0578c3-c418-4953-87c8-82d2b32e77a9"), UUID.fromString("265acc9c-95b5-44e6-950d-5ee5e25f1ba3"));
 
-
        // feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
-        var listofeed = feedRepo.getAllFeeds();
 
+       scrapperSum();
 
+    }
+
+    private void scrapperSum() throws InterruptedException {
+        var lisToFeed = feedRepo.getAllFeeds();
         RestTemplate restTemplate= new RestTemplate();
-        var aggregator = Engine.createEngineFromList(listofeed,feedByArticleRepo,400,150);
+        var aggregator = Engine.createEngineFromList(lisToFeed,feedByArticleRepo,4000,400);
         var answer = aggregator.retrieve();
+        var arr = answer.stream().flatMap(Optional::stream).collect(Collectors.toList());
 
-        var arr = answer.stream().map(Optional::get).toList();
-        var response= restTemplate.postForObject(
+        restTemplate.postForObject(
                 "http://localhost:8080/api/v1/articles/save",
         arr, Answer[].class);
-
     }
 
 

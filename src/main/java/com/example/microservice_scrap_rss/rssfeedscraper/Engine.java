@@ -49,9 +49,7 @@ public class Engine {
                 feed.getEntries().forEach(e-> {
                     var pubDate = LocalDate.ofInstant(e.getPublishedDate().toInstant(), ZoneId.systemDefault());
                     var uuid = UUID.randomUUID();
-                     System.out.println("IM article " + uuid + "for feed "  + site.getFeedId());
                     feedByArticleRepo.insertArticleToFeed(site.getFeedId(),uuid);
-
 
                     articles.add(Optional.of(
                             new Answer(uuid,
@@ -60,6 +58,7 @@ public class Engine {
                            pubDate,e.getLink())));
                 }
                 );
+
                 return articles;
             };
         } catch (FeedException | IOException e) {
@@ -80,7 +79,6 @@ public class Engine {
 
         future.forEach(e -> {
             try {
-
                 var answers = e.get();
                 list.addAll(answers);
             } catch (InterruptedException | ExecutionException ex) {
@@ -88,11 +86,5 @@ public class Engine {
             }
         });
         return new ArrayList<>(list);
-    }
-
-    public static void main(String[] args) throws InterruptedException, IOException {
-       // var aggregator = Engine.createEngineFromFile(Path.of("feeds.txt"),400,150);
-       // var answer = aggregator.retrieve();
-       // System.out.println(answer);
     }
 }

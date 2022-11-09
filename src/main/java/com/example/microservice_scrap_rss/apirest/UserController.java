@@ -40,6 +40,21 @@ public class UserController {
         return objectMapper.writeValueAsString(userRepo.getUserById(UUID.fromString(userId)));
     }
 
+
+    @PostMapping(value = "/subTo/{userId}/{feedId}")
+    String subUserToFeed(@PathVariable final String userId,@PathVariable final String feedId) throws JsonProcessingException {
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
+        feedByUserRepo.insertFeedToUser(UUID.fromString(userId),UUID.fromString(feedId));
+        return "Subbed !";
+    }
+
+    @PostMapping(value = "/unSubTo/{userId}/{feedId}")
+    String unSubUserToFeed(@PathVariable final String userId,@PathVariable final String feedId) throws JsonProcessingException {
+        keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
+        feedByUserRepo.removeFeedFromUser(UUID.fromString(userId),UUID.fromString(feedId));
+        return "UnSubbed !";
+    }
+
     @RequestMapping(value = "/last10/{userId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     String getLast10OfUser(@PathVariable final String userId) throws JsonProcessingException {

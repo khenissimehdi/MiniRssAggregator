@@ -9,7 +9,6 @@ public enum ProjectConstants {
     TABLE_FEED_BY_ARTICLE("feedbyarticle"),
     TABLE_FEED_BY_USER("feedbyuser");
 
-
     private final String env;
 
     ProjectConstants(String env) {

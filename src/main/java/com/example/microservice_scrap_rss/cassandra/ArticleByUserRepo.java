@@ -43,7 +43,7 @@ public class ArticleByUserRepo {
     public void createTable(String keyspace) {
         CreateTableWithOptions createTable = SchemaBuilder.createTable(ProjectConstants.TABLE_ARTICLE_BY_USER.env()).ifNotExists()
                 .withPartitionKey("userId", DataTypes.UUID)
-                .withPartitionKey("articleId", DataTypes.UUID)
+                .withColumn("articleId", DataTypes.UUID)
                 .withClusteringColumn("inserttime", DataTypes.TIMESTAMP).
                 withClusteringOrder("inserttime", ClusteringOrder.DESC);
         executeStatement(createTable.build(), keyspace);
