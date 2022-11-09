@@ -3,7 +3,6 @@ package com.example.microservice_scrap_rss.cassandra.repository;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
@@ -27,17 +26,16 @@ public class UserRepo {
 
     @Autowired
     private ArticleRepo articleRepo;
+
     public UserRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
     }
 
-    private ResultSet executeStatement(SimpleStatement statement, String keyspace) {
-        if (keyspace != null) {
+    private void executeStatement(SimpleStatement statement, String keyspace) {
+        if (keyspace != null)
             statement.setKeyspace(CqlIdentifier.fromCql(keyspace));
-        }
-
-        return session.execute(statement);
+        session.execute(statement);
     }
 
     public void createTable(String keyspace) {
@@ -45,19 +43,19 @@ public class UserRepo {
                 .withPartitionKey("id", DataTypes.UUID);
         executeStatement(createTable.build(), keyspace);
     }
+
     public UUID insertUser() {
-        var id=UUID.randomUUID();
+        var id = UUID.randomUUID();
         template.insert(new User(id));
         return id;
     }
 
     public List<User> getAllUsers() {
-        return template.select("SELECT * FROM user;",User.class);
+        return template.select("SELECT * FROM user;", User.class);
     }
 
     public User getUserById(UUID uuid) {
         return template.selectOne(Query.query(Criteria.where("id").is(uuid)), User.class);
     }
-
 }
 

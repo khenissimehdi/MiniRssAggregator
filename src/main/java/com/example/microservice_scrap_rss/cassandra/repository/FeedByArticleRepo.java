@@ -2,7 +2,6 @@ package com.example.microservice_scrap_rss.cassandra.repository;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
@@ -27,12 +26,10 @@ public class FeedByArticleRepo {
         this.template = new CassandraTemplate(session);
     }
 
-    private ResultSet executeStatement(SimpleStatement statement, String keyspace) {
-        if (keyspace != null) {
+    private void executeStatement(SimpleStatement statement, String keyspace) {
+        if (keyspace != null)
             statement.setKeyspace(CqlIdentifier.fromCql(keyspace));
-        }
-
-        return session.execute(statement);
+        session.execute(statement);
     }
 
     public void createTable(String keyspace) {
@@ -42,11 +39,11 @@ public class FeedByArticleRepo {
         executeStatement(createTable.build(), keyspace);
     }
 
-    public FeedByArticle insertArticleToFeed(UUID feedId, UUID articleId) {
-        var a = new FeedByArticle(feedId,articleId);
+    public void insertArticleToFeed(UUID feedId, UUID articleId) {
+        var a = new FeedByArticle(feedId, articleId);
         template.insert(a);
-        return a;
     }
+
     public List<FeedByArticle> getArticleByFeedID(UUID feedId) {
         return template.select(Query.query(Criteria.where("feedid").is(feedId)), FeedByArticle.class);
     }

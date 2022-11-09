@@ -25,7 +25,7 @@ public class ArticleController {
     @Autowired
     private ArticleRepo articleRepo;
 
-    private KafkaTemplate<String, List<Answer>> kafkaTemplate;
+    private final KafkaTemplate<String, List<Answer>> kafkaTemplate;
 
     public ArticleController(KafkaTemplate<String, List<Answer>> kafkaTemplate){
         this.kafkaTemplate = kafkaTemplate;

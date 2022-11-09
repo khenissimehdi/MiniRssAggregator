@@ -8,18 +8,21 @@ import com.datastax.oss.driver.api.querybuilder.schema.CreateKeyspace;
 import com.example.microservice_scrap_rss.ProjectConstants;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 @Repository
-public class KeyspaceRepository  {
-    public CqlSession session;
+public class KeyspaceRepository {
+    public final CqlSession session;
 
     public KeyspaceRepository(CqlSession session) {
+        Objects.requireNonNull(session);
         this.session = session;
     }
 
     public void createKeyspace(String keyspaceName, int numberOfReplicas) {
         CreateKeyspace createKeyspace = SchemaBuilder.createKeyspace(keyspaceName)
-          .ifNotExists()
-          .withSimpleStrategy(numberOfReplicas);
+                .ifNotExists()
+                .withSimpleStrategy(numberOfReplicas);
         session.execute(createKeyspace.build());
     }
 
@@ -28,11 +31,11 @@ public class KeyspaceRepository  {
     }
 
     public boolean checkIfKeySpaceIsUsed() {
-          try {
-              session.execute("DESC " + CqlIdentifier.fromCql(ProjectConstants.KEYSPACE.env()) ) ;
-              return true;
-          } catch (InvalidQueryException e) {
-              return false;
-          }
+        try {
+            session.execute("DESC " + CqlIdentifier.fromCql(ProjectConstants.KEYSPACE.env()));
+            return true;
+        } catch (InvalidQueryException e) {
+            return false;
+        }
     }
 }

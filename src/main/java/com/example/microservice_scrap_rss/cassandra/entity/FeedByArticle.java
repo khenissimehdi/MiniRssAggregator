@@ -10,20 +10,14 @@ import java.util.UUID;
 public class FeedByArticle {
     @PrimaryKey
     private final UUID feedId;
+    private final UUID articleId;
 
-    public UUID getFeedId() {
-        return feedId;
+    public FeedByArticle(UUID feedId, UUID articleId) {
+        this.feedId = feedId;
+        this.articleId = articleId;
     }
 
     public UUID getArticleId() {
         return articleId;
-    }
-
-    private final UUID articleId;
-
-
-    public FeedByArticle( UUID feedId,UUID articleId) {
-        this.feedId = feedId;
-        this.articleId = articleId;
     }
 }

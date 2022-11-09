@@ -22,20 +22,21 @@ public class KafkaConsumerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String serverValue;
+
     @Bean
-    public ConsumerFactory<String, List<Answer>> consumerFactory(){
-        Map<String,Object> config = new HashMap<>();
+    public ConsumerFactory<String, List<Answer>> consumerFactory() {
+        Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.RECEIVE_BUFFER_CONFIG, 104857600);
         config.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 104857600);
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,serverValue);
-        config.put(ConsumerConfig.GROUP_ID_CONFIG,"foo");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverValue);
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "foo");
         ObjectMapper om = new ObjectMapper();
         JavaType type = om.getTypeFactory().constructParametricType(List.class, Answer.class);
-        return new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(), new JsonDeserializer<>(type, om, false));
+        return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(type, om, false));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, List<Answer>> fooListener(){
+    public ConcurrentKafkaListenerContainerFactory<String, List<Answer>> fooListener() {
         ConcurrentKafkaListenerContainerFactory<String, List<Answer>> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

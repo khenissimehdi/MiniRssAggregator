@@ -1,6 +1,5 @@
 package com.example.microservice_scrap_rss.cassandra.entity;
 
-
 import java.time.LocalDate;
 import java.util.UUID;
 

@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 public class CassandraConnector {
 
     private CqlSession session;
+
     @Bean
     public CqlSession connect() {
         CqlSessionBuilder builder = CqlSession.builder();

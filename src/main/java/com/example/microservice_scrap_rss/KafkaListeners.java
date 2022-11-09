@@ -15,43 +15,31 @@ import java.util.List;
 public class KafkaListeners {
     @Autowired
     private ArticleRepo articleRepo;
-
     @Autowired
     private UserRepo userRepo;
     @Autowired
     private ArticleByUserRepo articleByUserRepo;
-
-    @Autowired
-    private FeedRepo feedRepo;
-
     @Autowired
     private FeedByArticleRepo feedByArticleRepo;
-
     @Autowired
     private FeedByUserRepo feedByUserRepo;
+
     @KafkaListener(topics = "rss", groupId = "rss_group_id")
     void listener(String data) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
-        List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>(){});
-
+        List<Article> participantJsonList = mapper.readValue(data, new TypeReference<>() {
+        });
         var users = userRepo.getAllUsers();
         users.forEach(user -> {
             var feedsOfUser = feedByUserRepo.getAllFeedsOf(user.getId());
             feedsOfUser.forEach(feed -> {
-               var articlesByFeed = feedByArticleRepo.getArticleByFeedID(feed.getFeedId());
-               articlesByFeed.forEach(articles -> {
-                   articleByUserRepo.insertArticleToUser(user.getId(),articles.getArticleId());
-               });
+                var articlesByFeed = feedByArticleRepo.getArticleByFeedID(feed.getFeedId());
+                articlesByFeed.forEach(articles -> articleByUserRepo.insertArticleToUser(user.getId(), articles.getArticleId()));
             });
         });
-
-        // Insert Articles
-        for(var item : participantJsonList) {
-            articleRepo.insertArticle(item.id(),item.title(),item.description(), item.pubDate(),item.link());
-        }
-
+        for (var item : participantJsonList)
+            articleRepo.insertArticle(item.id(), item.title(), item.description(), item.pubDate(), item.link());
         System.out.println("FINISHED SCRAP AND INSERTED IN DB");
-
     }
 }

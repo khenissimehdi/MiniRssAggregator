@@ -20,21 +20,21 @@ import java.util.concurrent.*;
 public class Engine {
 
     private final List<Feed> sites;
-    private List<Callable<List<Optional<Answer>>>> callableList;
     private final int timeoutMilliGlobal;
     private final ExecutorService executorService;
     private final FeedByArticleRepo feedByArticleRepo;
+    private List<Callable<List<Optional<Answer>>>> callableList;
 
 
-    private Engine(List<Feed> sites,FeedByArticleRepo feedByArticleRepo,int timeoutMilliGlobal, int poolSize) {
+    private Engine(List<Feed> sites, FeedByArticleRepo feedByArticleRepo, int timeoutMilliGlobal, int poolSize) {
         this.sites = sites;
         this.timeoutMilliGlobal = timeoutMilliGlobal;
         this.executorService = Executors.newFixedThreadPool(poolSize);
         this.feedByArticleRepo = feedByArticleRepo;
     }
 
-    public static Engine createEngineFromList(List<Feed> sites, FeedByArticleRepo feedByArticleRepo,int timeoutMilliGlobal, int poolSize) {
-        return new Engine(sites,feedByArticleRepo,timeoutMilliGlobal,poolSize);
+    public static Engine createEngineFromList(List<Feed> sites, FeedByArticleRepo feedByArticleRepo, int timeoutMilliGlobal, int poolSize) {
+        return new Engine(sites, feedByArticleRepo, timeoutMilliGlobal, poolSize);
     }
 
     private Callable<List<Optional<Answer>>> performReq(Feed site) {
@@ -43,25 +43,22 @@ public class Engine {
             SyndFeedInput input = new SyndFeedInput();
             SyndFeed feed = input.build(new XmlReader(request));
             List<Optional<Answer>> articles = new ArrayList<>();
-
-           return () -> {
-                feed.getEntries().forEach(e-> {
-                    var pubDate = LocalDate.ofInstant(e.getPublishedDate().toInstant(), ZoneId.systemDefault());
-                    var uuid = UUID.randomUUID();
-                    feedByArticleRepo.insertArticleToFeed(site.getFeedId(),uuid);
-
-                    articles.add(Optional.of(
-                            new Answer(uuid,
-                            e.getTitle(),
-                            e.getDescription().getValue(),
-                           pubDate,e.getLink())));
-                }
+            return () -> {
+                feed.getEntries().forEach(e -> {
+                            var pubDate = LocalDate.ofInstant(e.getPublishedDate().toInstant(), ZoneId.systemDefault());
+                            var uuid = UUID.randomUUID();
+                            feedByArticleRepo.insertArticleToFeed(site.getFeedId(), uuid);
+                            articles.add(Optional.of(
+                                    new Answer(uuid,
+                                            e.getTitle(),
+                                            e.getDescription().getValue(),
+                                            pubDate, e.getLink())));
+                        }
                 );
-
                 return articles;
             };
         } catch (FeedException | IOException e) {
-            return ()->List.of(Optional.empty());
+            return () -> List.of(Optional.empty());
         }
     }
 

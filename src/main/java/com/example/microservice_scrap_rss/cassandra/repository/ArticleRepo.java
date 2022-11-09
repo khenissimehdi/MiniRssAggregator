@@ -1,9 +1,7 @@
 package com.example.microservice_scrap_rss.cassandra.repository;
 
-
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
@@ -24,18 +22,15 @@ public class ArticleRepo {
     private final CqlSession session;
     private final CassandraOperations template;
 
-
     public ArticleRepo(CqlSession session) {
         this.session = session;
         this.template = new CassandraTemplate(session);
     }
 
-    private ResultSet executeStatement(SimpleStatement statement, String keyspace) {
-        if (keyspace != null) {
+    private void executeStatement(SimpleStatement statement, String keyspace) {
+        if (keyspace != null)
             statement.setKeyspace(CqlIdentifier.fromCql(keyspace));
-        }
-
-        return session.execute(statement);
+        session.execute(statement);
     }
 
     public void createTable(String keyspace) {
@@ -43,15 +38,14 @@ public class ArticleRepo {
                 .withPartitionKey("id", DataTypes.UUID)
                 .withColumn("title", DataTypes.TEXT)
                 .withColumn("description", DataTypes.TEXT)
-                .withColumn("pubDate",DataTypes.DATE)
+                .withColumn("pubDate", DataTypes.DATE)
                 .withColumn("link", DataTypes.TEXT);
         executeStatement(createTable.build(), keyspace);
     }
 
-    public UUID insertArticle(UUID id, String title, String description, LocalDate date, String link) {
-        var a=new Article(id,title,description,date,link);
+    public void insertArticle(UUID id, String title, String description, LocalDate date, String link) {
+        var a = new Article(id, title, description, date, link);
         template.insert(a);
-        return a.id();
     }
 
     public Article getArticleById(UUID uuid) {

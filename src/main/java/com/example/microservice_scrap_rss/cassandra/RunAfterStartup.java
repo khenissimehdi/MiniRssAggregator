@@ -20,28 +20,22 @@ import java.util.stream.IntStream;
 @Component
 public class RunAfterStartup {
 
+    private final ArrayList<UUID> feedUUIDS = new ArrayList<>();
+    private final ArrayList<UUID> usersUUIDS = new ArrayList<>();
     @Autowired
     private KeyspaceRepository keyspaceRepository;
-
     @Autowired
     private UserRepo userRepo;
     @Autowired
     private ArticleRepo articleRepo;
-
     @Autowired
     private FeedByUserRepo feedByUserRepo;
-
     @Autowired
     private ArticleByUserRepo articleByUserRepo;
-
     @Autowired
     private FeedRepo feedRepo;
-
     @Autowired
     private FeedByArticleRepo feedByArticleRepo;
-
-    private final ArrayList<UUID> feedUUIDS = new ArrayList<>();
-    private final ArrayList<UUID>  usersUUIDS = new ArrayList<>();
 
     private void addFeeds() {
         var feed1 = feedRepo.insertFeed("https://www.lemonde.fr/rss/une.xml");
@@ -51,9 +45,10 @@ public class RunAfterStartup {
     }
 
     private void addUsers() {
-        IntStream.range(0,3).forEach(i ->  usersUUIDS.add(userRepo.insertUser()));
+        IntStream.range(0, 3).forEach(i -> usersUUIDS.add(userRepo.insertUser()));
     }
-    private void createTables(){
+
+    private void createTables() {
         userRepo.createTable(ProjectConstants.KEYSPACE.env());
         articleRepo.createTable(ProjectConstants.KEYSPACE.env());
         feedByUserRepo.createTable(ProjectConstants.KEYSPACE.env());
@@ -63,16 +58,16 @@ public class RunAfterStartup {
     }
 
     private void subUsersToRandomFeeds() {
-       usersUUIDS.forEach( uuid -> {
-           Random rand = new Random();
-           var randomUUID = feedUUIDS.get(rand.nextInt(feedUUIDS.size()));
-           feedByUserRepo.insertFeedToUser(uuid,randomUUID);
-       });
+        usersUUIDS.forEach(uuid -> {
+            Random rand = new Random();
+            var randomUUID = feedUUIDS.get(rand.nextInt(feedUUIDS.size()));
+            feedByUserRepo.insertFeedToUser(uuid, randomUUID);
+        });
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-        if(!keyspaceRepository.checkIfKeySpaceIsUsed()) {
+        if (!keyspaceRepository.checkIfKeySpaceIsUsed()) {
             initCassandra();
             scrapperSum();
         } else {
@@ -100,15 +95,14 @@ public class RunAfterStartup {
             try {
                 System.out.println("GOING TO LAUNCH A SCRAP");
                 var lisToFeed = feedRepo.getAllFeeds();
-                RestTemplate restTemplate= new RestTemplate();
-                var aggregator = Engine.createEngineFromList(lisToFeed,feedByArticleRepo,4000,400);
+                RestTemplate restTemplate = new RestTemplate();
+                var aggregator = Engine.createEngineFromList(lisToFeed, feedByArticleRepo, 4000, 400);
                 List<Optional<Answer>> answer = aggregator.retrieve();
                 var arr = answer.stream().flatMap(Optional::stream).collect(Collectors.toList());
-
                 restTemplate.postForObject(
                         ProjectConstants.API_URL_DEV.env() + "/articles/save",
-                        arr, Answer[].class);
-
+                        arr, Answer[].class
+                );
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
