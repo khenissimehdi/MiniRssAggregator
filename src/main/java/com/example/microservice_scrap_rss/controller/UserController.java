@@ -21,32 +21,37 @@ import java.util.UUID;
 @RequestMapping(value = "api/v1/users/")
 public class UserController {
 
+    private final KeyspaceRepository keyspaceRepository;
+    private final UserRepo userRepo;
+    private final ArticleRepo articleRepo;
+    private final FeedByUserRepo feedByUserRepo;
+    private final ArticleByUserRepo articleByUserRepo;
+
     @Autowired
-    private KeyspaceRepository keyspaceRepository;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private ArticleRepo articleRepo;
-    @Autowired
-    private FeedByUserRepo feedByUserRepo;
-    @Autowired
-    private ArticleByUserRepo articleByUserRepo;
+    UserController(KeyspaceRepository keyspaceRepository, UserRepo userRepo, ArticleRepo articleRepo, FeedByUserRepo feedByUserRepo, ArticleByUserRepo articleByUserRepo) {
+        this.keyspaceRepository = keyspaceRepository;
+        this.userRepo = userRepo;
+        this.articleRepo = articleRepo;
+        this.feedByUserRepo = feedByUserRepo;
+
+        this.articleByUserRepo = articleByUserRepo;
+    }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<String> getUserById(@PathVariable final String userId) throws JsonProcessingException {
-        if(userRepo.getUserById(UUID.fromString(userId)) == null)
+        if (userRepo.getUserById(UUID.fromString(userId)) == null)
             return new ResponseEntity<>("Id not found", HttpStatus.BAD_REQUEST);
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        var response =  objectMapper.writeValueAsString(userRepo.getUserById(UUID.fromString(userId)));
+        var response = objectMapper.writeValueAsString(userRepo.getUserById(UUID.fromString(userId)));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(value = "/subTo/{userId}/{feedId}")
     ResponseEntity<String> subUserToFeed(@PathVariable final String userId, @PathVariable final String feedId) {
-        if(userRepo.getUserById(UUID.fromString(userId)) == null)
+        if (userRepo.getUserById(UUID.fromString(userId)) == null)
             return new ResponseEntity<>("Id not found", HttpStatus.BAD_REQUEST);
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         feedByUserRepo.insertFeedToUser(UUID.fromString(userId), UUID.fromString(feedId));
@@ -55,7 +60,7 @@ public class UserController {
 
     @PostMapping(value = "/unSubTo/{userId}/{feedId}")
     ResponseEntity<String> unsubUserToFeed(@PathVariable final String userId, @PathVariable final String feedId) {
-        if(userRepo.getUserById(UUID.fromString(userId)) == null)
+        if (userRepo.getUserById(UUID.fromString(userId)) == null)
             return new ResponseEntity<>("Id not found", HttpStatus.BAD_REQUEST);
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         feedByUserRepo.removeFeedFromUser(UUID.fromString(userId), UUID.fromString(feedId));
@@ -65,7 +70,7 @@ public class UserController {
     @RequestMapping(value = "/last10/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<String> getLast1OArticleByUserId(@PathVariable final String userId) throws JsonProcessingException {
-        if(userRepo.getUserById(UUID.fromString(userId)) == null)
+        if (userRepo.getUserById(UUID.fromString(userId)) == null)
             return new ResponseEntity<>("Id not found", HttpStatus.BAD_REQUEST);
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var list = articleByUserRepo.getLast10ArticlesOf(UUID.fromString(userId));

@@ -21,30 +21,33 @@ import java.util.UUID;
 @RequestMapping(value = "api/v1/articles/")
 public class ArticleController {
 
-    @Autowired
-    private KeyspaceRepository keyspaceRepository;
-    @Autowired
-    private ArticleRepo articleRepo;
+
+    private final KeyspaceRepository keyspaceRepository;
+
+    private final ArticleRepo articleRepo;
 
     private final KafkaTemplate<String, List<Answer>> kafkaTemplate;
 
-    public ArticleController(KafkaTemplate<String, List<Answer>> kafkaTemplate){
+    @Autowired
+    public ArticleController(KeyspaceRepository keyspaceRepository, ArticleRepo articleRepo, KafkaTemplate<String, List<Answer>> kafkaTemplate) {
+        this.keyspaceRepository = keyspaceRepository;
+        this.articleRepo = articleRepo;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @RequestMapping(value = "/{articleId}", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{articleId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     ResponseEntity<String> getArticleById(@PathVariable final String articleId) throws JsonProcessingException {
         keyspaceRepository.useKeyspace(ProjectConstants.KEYSPACE.env());
         var article = articleRepo.getArticleById(UUID.fromString(articleId));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        var response =  objectMapper.writeValueAsString(articleRepo.getArticleById(article.id()));
+        var response = objectMapper.writeValueAsString(articleRepo.getArticleById(article.id()));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(value = "/save")
-    public void save(@RequestBody ArrayList<Answer> request){
-        kafkaTemplate.send("rss",request);
+    public void save(@RequestBody ArrayList<Answer> request) {
+        kafkaTemplate.send("rss", request);
     }
 }
